@@ -1,0 +1,5 @@
+how to get ENMTools to work:
+
+set the wd to the perl folder?
+
+- enter in the following command $/usr/local/ActivePerl-5.22/bin/perl /usr/local/ActivePerl-5.22/ENMTools_1.4.4.pl 
