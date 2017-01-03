@@ -23,8 +23,6 @@ brach_morph_means <- as.data.frame(matrix(NA,nrow=length(unique(brach_morph$Spec
 brach_morph_means[,1] <- unique(brach_morph$Species)
 colnames(brach_morph_means)[1] <- colnames(brach_morph)[1]
 
-tapply(brach_morph[,3], INDEX=brach_morph$Species, FUN=mean)
-
 
 #script to store means in means object
 for ( a in 2:ncol(brach_morph)) {
@@ -33,4 +31,10 @@ for ( a in 2:ncol(brach_morph)) {
   colnames(brach_morph_means)[a] <- colnames(brach_morph)[a]
 }
   
-  
+brach_morph_means <- na.omit(brach_morph_means)
+
+##standardize ruling:
+#divide by HL
+#add 1
+#ln() transform
+
