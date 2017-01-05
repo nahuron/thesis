@@ -1,5 +1,5 @@
 #PCA by species means (transform, then calculate means)
-
+#read in morphology object
 read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_brachymeles_morph_raw_means.csv", header=T, fill=T, nrows=600) -> brach_morph
 
 #drop species that aren't considered in the CA structure portion
@@ -17,10 +17,28 @@ brach_morph <- brach_morph[!colnames(brach_morph) %in% "AGD"]
 brach_morph <- brach_morph[!colnames(brach_morph) %in% "NL"]
 
 
+#-----------------------------------------------------------------------------------------
+#alternative PCA groupings:
+#isolate characters
+
+#noTL dataset
+brach_morph <- brach_morph[colnames(brach_morph) %in% c("Species", "SVL","HL", "ForeL", "HindL", "MBW", "TW", "TD", "HW", "HD", "ED", "END", "SNL", "IND", "Limbstate", "Fldig", "Hldig")]
+
+#reduced dataset
+brach_morph <- brach_morph[colnames(brach_morph) %in% c("Species", "SVL","HL", "TL", "ForeL", "HindL", "MBW", "TW", "HW", "Limbstate", "Fldig", "Hldig")]
+
+#reduced and noTL dataset
+brach_morph <- brach_morph[colnames(brach_morph) %in% c("Species", "SVL","HL", "ForeL", "HindL", "MBW", "TW", "HW", "Limbstate", "Fldig", "Hldig")]
+
+#no discrete characters (warning: labels will not work)
+brach_morph <- brach_morph[!colnames(brach_morph) %in% c("Limbstate", "Fldig", "Hldig")]
+
+
+
 #Exclude any entries that are missing data
 brach_morph <- na.omit(brach_morph)
 brach_morph$Species <- droplevels(brach_morph$Species)
-
+#-----------------------------------------------------------------------------------------
 
 ###standardize ruling:
 ##divide by HL
@@ -44,6 +62,7 @@ for(b in 2:ncol(brach_morph_final)){
   }
 }
 
+#-----------------------------------------------------------------------------------------
 #create means object
 brach_morph_means <- as.data.frame(matrix(NA,nrow=length(unique(brach_morph_final$Species)), ncol=ncol(brach_morph_final)))
 brach_morph_means[,1] <- unique(brach_morph_final$Species)
@@ -85,6 +104,7 @@ sp.palette <- (col_vector[cols40])[1:length(unique(brach_morph$Species))]
 #store colors and species
 species.legend <- cbind(unique(as.character(as.factor(brach_morph[,"Species"]))), sp.palette)
 #-----------------------------------------------------------------------------------------
+
 #store digit counts for labels
 brach_fldig <- tapply(brach_limbs$Fldig, INDEX=brach_limbs$Species, FUN=mean)
 brach_fldig <- round(brach_fldig, digits=2)
@@ -92,15 +112,14 @@ brach_hldig <- tapply(brach_limbs$Hldig, INDEX=brach_limbs$Species, FUN=mean)
 brach_hldig <- round(brach_hldig, digits=2)
 brach_limb <- tapply(brach_limbs$Limbstate, INDEX=brach_limbs$Species, FUN=mean)
 #-----------------------------------------------------------------------------------------
+
 palette(sp.palette)
 plot(pca.all$x[,1],pca.all$x[,2], 
-     pch=21, cex=0.8, col="black", bg=as.factor(rownames(pca.all$x)), 
+     pch=21, cex=1, col="black", bg=as.factor(rownames(pca.all$x)), 
      xlim=c(min(pca.all$x[,1]*1.25),max(pca.all$x[,1]*1.25)), 
      ylim=c(min(pca.all$x[,2]*1.25),max(pca.all$x[,2]*1.25)), 
      main=expression(Morphometric~PCA~of~Species~of~italic(Brachymeles)), 
      xlab=paste0("PC 1 - ", (pca.varholder$importance[2,1]*100), " %"),
      ylab=paste0("PC 2 - ", (pca.varholder$importance[2,2]*100), " %"))
-#points(PC.values$MEANS[,1],PC.values$MEANS[,2], pch=23, cex=2, col="black", bg=as.factor(rownames(PC.values$MEANS)))
-#pointLabel(PC.values$MEANS[,1],PC.values$MEANS[,2],paste0(rownames(PC.values$MEANS), " ",brach_limb," (", brach_fldig, ",", brach_hldig,")"), allowSmallOverlap=F, col=palette(sp.palette), cex=0.5)
 pointLabel(pca.all$x[,1],pca.all$x[,2],paste0(rownames(pca.all$x), " ",brach_limb," (", brach_fldig, ",", brach_hldig,")"), allowSmallOverlap=F, col="black", cex=0.7, doPlot=FALSE) -> xypts
 shadowtext(xypts$x, xypts$y, labels=paste0(rownames(pca.all$x), " ",brach_limb," (", brach_fldig, ",", brach_hldig,")"), col=palette(sp.palette), bg="black", cex=0.7, r=0.05)
