@@ -12,6 +12,7 @@ brach_morph <- brach_morph[!brach_morph[,1]=="miriamae",]
 
 brach_morph$Species <- droplevels(brach_morph$Species)
 
+#drop characters not of interest
 brach_morph <- brach_morph[!colnames(brach_morph) %in% "AGD"]
 brach_morph <- brach_morph[!colnames(brach_morph) %in% "NL"]
 
@@ -48,6 +49,8 @@ brach_morph_means <- as.data.frame(matrix(NA,nrow=length(unique(brach_morph_fina
 brach_morph_means[,1] <- unique(brach_morph_final$Species)
 colnames(brach_morph_means)[1] <- colnames(brach_morph_final)[1]
 
+#store nominal characters elsewhere
+brach_limbs <- brach_morph[colnames(brach_morph) %in% c("Species", "Limbstate", "Fldig", "Hldig")]
 
 #script to store means in means object
 for ( a in 2:ncol(brach_morph_final)) {
@@ -58,12 +61,46 @@ for ( a in 2:ncol(brach_morph_final)) {
 
 brach_morph_means <- na.omit(brach_morph_means)
 
+#-----------------------------------------------------------------------------------------
 #obtain all loadings regardless of community to establish approximate min and max for figure
 pca.all <- prcomp(brach_morph_means[,2:ncol(brach_morph_means)], scale=T)
 rownames(pca.all$x) <- sort(unique(brach_morph_means$Species))
 
 summary(pca.all)->pca.varholder
-plot(pca.all$x[,1],pca.all$x[,2])
-
 #-----------------------------------------------------------------------------------------
 
+library(maptools)
+library(scales)
+library(TeachingDemos)
+library(RColorBrewer)
+n <- 40
+qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+sort(unique(col_vector)) -> col_vector
+cols40 <- sort(c(1, 2, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 24, 28, 29, 31, 36, 41, 43, 45, 46, 51, 52, 53, 54, 57, 59, 63, 64, 6, 8, 21, 35, 34, 4, 67))
+
+#create palette
+sp.palette <- (col_vector[cols40])[1:length(unique(brach_morph$Species))]
+
+#store colors and species
+species.legend <- cbind(unique(as.character(as.factor(brach_morph[,"Species"]))), sp.palette)
+#-----------------------------------------------------------------------------------------
+#store digit counts for labels
+brach_fldig <- tapply(brach_limbs$Fldig, INDEX=brach_limbs$Species, FUN=mean)
+brach_fldig <- round(brach_fldig, digits=2)
+brach_hldig <- tapply(brach_limbs$Hldig, INDEX=brach_limbs$Species, FUN=mean)
+brach_hldig <- round(brach_hldig, digits=2)
+brach_limb <- tapply(brach_limbs$Limbstate, INDEX=brach_limbs$Species, FUN=mean)
+#-----------------------------------------------------------------------------------------
+palette(sp.palette)
+plot(pca.all$x[,1],pca.all$x[,2], 
+     pch=21, cex=0.8, col="black", bg=as.factor(rownames(pca.all$x)), 
+     xlim=c(min(pca.all$x[,1]*1.25),max(pca.all$x[,1]*1.25)), 
+     ylim=c(min(pca.all$x[,2]*1.25),max(pca.all$x[,2]*1.25)), 
+     main=expression(Morphometric~PCA~of~Species~of~italic(Brachymeles)), 
+     xlab=paste0("PC 1 - ", (pca.varholder$importance[2,1]*100), " %"),
+     ylab=paste0("PC 2 - ", (pca.varholder$importance[2,2]*100), " %"))
+#points(PC.values$MEANS[,1],PC.values$MEANS[,2], pch=23, cex=2, col="black", bg=as.factor(rownames(PC.values$MEANS)))
+#pointLabel(PC.values$MEANS[,1],PC.values$MEANS[,2],paste0(rownames(PC.values$MEANS), " ",brach_limb," (", brach_fldig, ",", brach_hldig,")"), allowSmallOverlap=F, col=palette(sp.palette), cex=0.5)
+pointLabel(pca.all$x[,1],pca.all$x[,2],paste0(rownames(pca.all$x), " ",brach_limb," (", brach_fldig, ",", brach_hldig,")"), allowSmallOverlap=F, col="black", cex=0.7, doPlot=FALSE) -> xypts
+shadowtext(xypts$x, xypts$y, labels=paste0(rownames(pca.all$x), " ",brach_limb," (", brach_fldig, ",", brach_hldig,")"), col=palette(sp.palette), bg="black", cex=0.7, r=0.05)
