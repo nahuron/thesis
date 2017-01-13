@@ -64,4 +64,5 @@ phylostruct.rev <- function (samp, tree, sp=NA, comminmax=NULL, env = NULL, metr
 }
     		
 phylostruct.rev(emp.comm, brach, c(2,5), env=NULL, sp=as.character(brach_fr_key_l$Species), metric="psv", null.model="other", runs=100, alpha= 0.05)
+phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, metric="psv", null.model="other", runs=100, alpha= 0.05)
 phylostruct.rev(emp.comm, brach, env=NULL, metric="psv", null.model="richness", runs=100, alpha= 0.05)

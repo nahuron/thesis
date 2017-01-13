@@ -1,7 +1,5 @@
 #separate out coordinate data into new files by species
 
-
-
 #function form of this script
 
 sp.coordsorter <- function(coords, sp=NULL, writepath=getwd())	{

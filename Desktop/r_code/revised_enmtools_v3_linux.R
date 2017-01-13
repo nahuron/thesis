@@ -115,25 +115,23 @@ for (b in brach.notlist.index)	{
   }
 }
 #rm(ident.list)							
-
-
 	
 #bg.asym.list <- as.list(rep(NA, ((length(sp.files2)*(length(sp.files2)+1))/2)))
 
 #forward loop
-for (d in brach.notlist.index)	{
+for (d in brach.notlist.index[3:24])	{
   for (e in brach.list.index)		{
     if(names(sp.list[d]) == names(sp.list[e]))	{
       print("Skip due to same species")
     }	else	{
       print(paste0("BAST_",names(sp.list[d]), "_vs_bg_", names(sp.list[e])))
-      #bg.asym.hold <- background.test(species.1 = sp.list[[d]], species.2 = sp.list[[e]], env = env, type = "mx", nreps = 99, test.type = "asymmetric" )
-      #bg.asym.list <- as.list(paste0("BAST_",names(sp.list[d]), "_vs_bg_", names(sp.list[e])))
-      #assign(paste0("BAST_",names(sp.list[d]), "_vs_bg_", names(sp.list[e])), bg.asym.hold)
-      #save(list=as.character(bg.asym.list[1]), file=paste0("/Volumes/Nicholas_Huron_Backup/BAST/",bg.asym.list[1],".rda"), compress="xz")
-      #rm(bg.asym.hold)
-      #rm(list=as.character(bg.asym.list[1]))
-      #gc()
+      bg.asym.hold <- background.test(species.1 = sp.list[[d]], species.2 = sp.list[[e]], env = env, type = "mx", nreps = 99, test.type = "asymmetric" )
+      bg.asym.list <- as.list(paste0("BAST_",names(sp.list[d]), "_vs_bg_", names(sp.list[e])))
+      assign(paste0("BAST_",names(sp.list[d]), "_vs_bg_", names(sp.list[e])), bg.asym.hold)
+      save(list=as.character(bg.asym.list[1]), file=paste0(getwd(),"/",bg.asym.list[1],".rda"), compress="xz")
+      rm(bg.asym.hold)
+      rm(list=as.character(bg.asym.list[1]))
+      gc()
     }
   }
 }
