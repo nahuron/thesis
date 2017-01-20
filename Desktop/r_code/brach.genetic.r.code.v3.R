@@ -81,10 +81,10 @@ for (a in 1:length(community.files))	{
 	  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_l$Species), metric="psv", null.model="other", runs=1000, alpha= 0.05)
 	}
 	else if(length(grep("_M", community.files.short[a]))>=1)  {
-	  psv.hold <- phylostruct.rev(emp.comm, brach, c(2,5), env=NULL, sp=as.character(brach_fr_key_m$Species), metric="psv", null.model="other", runs=1000, alpha= 0.05)
+	  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_m$Species), metric="psv", null.model="other", runs=1000, alpha= 0.05)
 	}
 	else{
-	  psv.hold <- phylostruct.rev(emp.comm, brach, c(2,5), env=NULL, metric="psv", null.model="other", runs=1000, alpha= 0.05)
+	  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, metric="psv", null.model="other", runs=1000, alpha= 0.05)
 	}
 	
 	  psv.pvalues.hold <- rep(NA, length(psv.bycom.hold$PSVs))

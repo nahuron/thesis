@@ -11,6 +11,9 @@ setClass(Class="com_distances", representation(sim.com.distances="list", emp.com
 
 #set working space mac
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology")
+
+
+#Old Version of reading in data
 #-----------------------------------------------------------------------------------------
 #load in dataset 1 (here it is the morphometric data provided via CDS per individual with species identifier): 17
 read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v6_rawmeans.txt", header=T, fill=T, nrows=600) -> brach_morph
@@ -26,6 +29,32 @@ read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_
 #reduced noTL
 read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v5_rawmeans_reduced.txt", header=T, fill=T, nrows=600) -> brach_morph
 brach_morph <- brach_morph[!colnames(brach_morph) %in% "TL.HL"]
+#-----------------------------------------------------------------------------------------
+
+#New Method for reading in data
+#read in morphology object
+read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_brachymeles_morph_raw_means.csv", header=T, fill=T, nrows=600) -> brach_morph
+
+#drop species that aren't considered in the CA structure portion
+brach_morph <- brach_morph[!brach_morph[,1]=="species2",]
+brach_morph <- brach_morph[!brach_morph[,1]=="species3",]
+brach_morph <- brach_morph[!brach_morph[,1]=="c.f._bonitae",]
+brach_morph <- brach_morph[!brach_morph[,1]=="c.f..bonitae",]
+brach_morph <- brach_morph[!brach_morph[,1]=="apus",]
+brach_morph <- brach_morph[!brach_morph[,1]=="miriamae",]
+
+brach_morph$Species <- droplevels(brach_morph$Species)
+
+#drop characters not of interest
+brach_morph <- brach_morph[!colnames(brach_morph) %in% "AGD"]
+brach_morph <- brach_morph[!colnames(brach_morph) %in% "NL"]
+
+
+#-----------------------------------------------------------------------------------------
+#store nominal characters elsewhere
+brach_limbs <- brach_morph[colnames(brach_morph) %in% c("Species", "Limbstate", "Fldig", "Hldig")]
+#remove the nominal characters
+brach_morph <- brach_morph[!colnames(brach_morph) %in% c("Limbstate", "Fldig", "Hldig")]
 
 
 #-----------------------------------------------------------------------------------------
