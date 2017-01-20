@@ -54,10 +54,13 @@ simcoms.meanrichness.gen <- simcoms.meanrichness
 #simcom means of species richness
 
 simcoms.meanrichness.means <- rep(NA, times=length(simcoms.meanrichness))
+simcoms.meanrichness.sd <- rep(NA, times=length(simcoms.meanrichness))
 
 for(b in 1: length(simcoms.meanrichness)){
   print(mean(simcoms.meanrichness[[b]]))
+  print(sd(simcoms.meanrichness[[b]]))
   simcoms.meanrichness.means[b] <- mean(simcoms.meanrichness[[b]])
+  simcoms.meanrichness.sd[b] <- sd(simcoms.meanrichness[[b]])
 }
 
 #determine the mean of mean morphological disparity by community
