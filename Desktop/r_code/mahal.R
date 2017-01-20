@@ -248,7 +248,7 @@ for(a in 1:length(emp.com.files)){
   #write.csv(emp.com.newdata, paste0("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/", emp.com.files.short[a], "_morph.csv"))
   
   #noTL
-  write.csv(emp.com.newdata, paste0("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/", gsub("_fr","_rednoTL_fr",emp.com.files.short[a]), "_morph.csv"))
+  write.csv(emp.com.newdata, paste0("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/", gsub("_fr","_mahal_fr",emp.com.files.short[a]), "_morph.csv"))
   
   #rm(list=c("emp.com.newdata", "emp.com.mean.pvalues", "emp.com.mean.holder", "com.morph.holder", "emp.comm"))
   
