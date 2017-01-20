@@ -1,4 +1,6 @@
 # find out the average community size across grid sizes
+library(fields)
+
 
 test <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", pattern="[fr.csv]*$")
 test2 <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", pattern="[fr.csv]*$", full.names=TRUE)
