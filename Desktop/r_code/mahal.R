@@ -80,18 +80,38 @@ brach_morph$Species <- droplevels(brach_morph$Species)
 
 #now check to ensure levels were dropped
 unique(brach_morph$Species) #45 levels, should be 43 since dalawangdaliri and suluensis are omitted; libayani dropped
+#-----------------------------------------------------------------------------------------
+###standardize ruling:
+##divide by HL
+#new brach object for transformed values
+#brach_morph_final <- brach_morph
+#store all HL
+brach_HL <- brach_morph$HL
+#rm HL from original object
+brach_morph_final <- brach_morph[!colnames(brach_morph) %in% "HL"]
+#divide certain columns by HL (SVL, TL, ForeL, HindL, MBW, MBD, TW, TD, HW, HD, ED, END, SNL, IND)
+for(b in 2:ncol(brach_morph_final)){
+  if(is.integer(brach_morph_final[,b])==FALSE && is.numeric(brach_morph_final[,b])==TRUE){
+    #ln(continuous value then divide by HL then add 1)
+    print(paste0("Continuous: ", colnames(brach_morph_final)[b]))
+    brach_morph_final[,b] <- log(((brach_morph_final[,b]/brach_HL)+1))
+  }
+  #ln(discrete value then add 1)
+  else if(is.integer(brach_morph_final[,b])==TRUE && is.numeric(brach_morph_final[,b])==TRUE){
+    print(paste0("Discrete: ", colnames(brach_morph_final)[b]))
+    brach_morph_final[,b] <- log(brach_morph_final[,b]+1)
+  }
+}
+
+
 
 #-----------------------------------------------------------------------------------------
 #alternative to PC loading methods that uses Mahalanobis D^2 distances, which are adjusted for sample sizes and variances
 
-#complete dataset
-
-#noTL dataset
-
 #reduced morphology dataset
-d2.full <- pairwise.mahalanobis(x=brach_morph[,2:10], grouping=brach_morph$Species)
+d2.full <- pairwise.mahalanobis(x=brach_morph_final[,2:15], grouping=brach_morph_final$Species)
 
-rownames(d2.full$distance) <- unique(brach_morph$Species);colnames(d2.full$distance) <- unique(brach_morph$Species)
+rownames(d2.full$distance) <- unique(brach_morph_final$Species);colnames(d2.full$distance) <- unique(brach_morph_final$Species)
 
 #-----------------------------------------------------------------------------------------
 #Obtain Community Means and test against nulls
