@@ -88,7 +88,7 @@ for (a in 1:length(morph.long)){
 plot(seq(from=0.05,to=1.00,by=0.05), mycoms.meanrichness, pch=16, col="blue",  ylim=c(2,5), xlim=c(0.00,1.05))
 bplot(simcoms.meanrichness, pos=seq(from=0.05,to=1.00,by=0.05), add=TRUE, axes=FALSE)
 
-plot(seq(from=0.05,to=1.00,by=0.05), mycoms.ncoms, pch=17, col="red")
+plot(seq(from=0.05,to=1.00,by=0.05), mycoms.ncoms, pch=17, col="red", xlim=c(0,1.05), ylim=c(30,45), ylab="Number of Communities", xlab="Grid Size (Decimal Degrees)")
 
 results.morph <- list()
 length(results.morph) <- length(morph.short)
