@@ -33,13 +33,16 @@ brach_fr_key <- read.csv("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Hur
 for (c in 1:length(mydata.filepath))  {
   #call data itself
   mydata <- read.csv(mydata.filepath[c], header=T, row.names=1)
-  print(mydata)
   #create object for communities to have FR code
   com.fr <- rep(NA, times=nrow(mydata))
+  
+  #check the columns of mydata to figure out which ones correspond to species
+  
+  
 #Iterate Matching and coding in com.fr object
 for (a in 1:(nrow(mydata)-1)) { #isolate row of interest
     com.match.hold <- 0
-  for (b in 1:41) { #isolate cell within row of interest
+  for (b in which(apply(X=mydata, MARGIN=2, FUN=function(x) all(x[!is.na(x)==TRUE]%%1==0)), useNames = FALSE)) { #isolate cell within row of interest
   if (mydata[a,b]==1){
     m <- match(as.character(colnames(mydata[a,][b])), as.character(brach_fr_key[,1]))
     com.match.hold <- c(com.match.hold, as.character(brach_fr_key$FR.code[m]))
