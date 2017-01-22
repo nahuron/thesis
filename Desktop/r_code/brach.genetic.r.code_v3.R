@@ -1,4 +1,5 @@
 #megaloop or lapply
+library(picante)
 
 #read in community options
 community.files <- list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", full.names=T)
@@ -25,6 +26,7 @@ community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuro
 	for(b in 1:length(community.files.short)){results.list[[b]] <- results.df}
 	rm(results.df)
 
+#loop that runs all metrics and populates results object
 for (a in 1:length(community.files))	{
 #for (a in 1:1)	{
 	#read in community replicate
@@ -124,6 +126,7 @@ for (a in 1:length(community.files))	{
 	rm(list=c("emp.comm", "ses.mpd.hold", "ses.mntd.hold", "psv.hold", "psv.bycom.hold", "psv.pvalues.hold"))
 										}
 
+#loop to write the resulting metric values into objects (csv files)
 for (c in 1:length(results.list))	{
 #for (c in 1)	{
   emp.comm <- read.csv(paste0(community.files[c]), header=T, row.names=1)
