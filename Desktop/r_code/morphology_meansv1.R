@@ -30,6 +30,11 @@ brach_morph <- brach_morph[colnames(brach_morph) %in% c("Species", "SVL","HL", "
 #reduced and noTL dataset (BodyNT)
 brach_morph <- brach_morph[colnames(brach_morph) %in% c("Species", "SVL","HL", "ForeL", "HindL", "MBW", "TW", "HW", "Limbstate", "Fldig", "Hldig")]
 
+#no discrete characters (warning: labels will not work)
+#store nominal characters elsewhere
+brach_limbs <- brach_morph[colnames(brach_morph) %in% c("Species", "Limbstate", "Fldig", "Hldig")]
+brach_morph <- brach_morph[!colnames(brach_morph) %in% c("Limbstate", "Fldig", "Hldig")]
+
 
 #Exclude any entries that are missing data
 brach_morph <- na.omit(brach_morph)

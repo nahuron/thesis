@@ -49,6 +49,8 @@ brach_morph$Species <- droplevels(brach_morph$Species)
 brach_morph <- brach_morph[!colnames(brach_morph) %in% "AGD"]
 brach_morph <- brach_morph[!colnames(brach_morph) %in% "NL"]
 
+#drop TL to include all species
+brach_morph <- brach_morph[!colnames(brach_morph) %in% "TL"]
 
 #-----------------------------------------------------------------------------------------
 #store nominal characters elsewhere
