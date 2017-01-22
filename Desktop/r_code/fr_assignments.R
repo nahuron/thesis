@@ -26,11 +26,11 @@ mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".c
 #read in FR key
 brach_fr_key <- read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/brach_FR_key.csv", header=T)
 
+#linux
 brach_fr_key <- read.csv("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/brach_FR_key.csv", header=T)
 
 
 for (c in 1:length(mydata.filepath))  {
-#for (c in 1)  {
   #call data itself
   mydata <- read.csv(mydata.filepath[c], header=T, row.names=1)
   print(mydata)
@@ -38,7 +38,6 @@ for (c in 1:length(mydata.filepath))  {
   com.fr <- rep(NA, times=nrow(mydata))
 #Iterate Matching and coding in com.fr object
 for (a in 1:(nrow(mydata)-1)) { #isolate row of interest
-  #for (a in 20)  {
     com.match.hold <- 0
   for (b in 1:41) { #isolate cell within row of interest
   if (mydata[a,b]==1){
