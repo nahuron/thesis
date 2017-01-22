@@ -65,8 +65,8 @@ read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Ma
 read.csv("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.fall2016.csv", header=T)->brach_loc
 
 #brach_loc <- brach_loc[brach_loc[,1]!="libayani",]
-brach_loc <- brach_loc[brach_loc[,1]!="suluensis",]
-brach_loc <- brach_loc[brach_loc[,1]!="dalawangdaliri",]
+#brach_loc <- brach_loc[brach_loc[,1]!="suluensis",]
+#brach_loc <- brach_loc[brach_loc[,1]!="dalawangdaliri",]
 brach_loc <- brach_loc[brach_loc[,1]!="species2",]
 brach_loc <- brach_loc[brach_loc[,1]!="species3",]
 brach_loc <- brach_loc[brach_loc[,1]!="c.f._bonitae",]
