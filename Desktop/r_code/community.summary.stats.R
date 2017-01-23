@@ -67,8 +67,8 @@ for(b in 1: length(simcoms.meanrichness)){
 
 #determine the mean of mean morphological disparity by community
 
-morph.short <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph", pattern="[fr.csv]*$")
-morph.long <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph", pattern="[fr.csv]*$", full.names = TRUE)
+morph.short <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL", pattern="[fr.csv]*$")
+morph.long <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL", pattern="[fr.csv]*$", full.names = TRUE)
 
 
 morph.short[-grep("_fr.csv", morph.short)] -> morph.short

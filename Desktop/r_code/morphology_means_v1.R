@@ -118,7 +118,7 @@ brach_limb <- tapply(brach_limbs$Limbstate, INDEX=brach_limbs$Species, FUN=mean)
 
 palette(sp.palette)
 plot(pca.all$x[,1],pca.all$x[,2], 
-     pch=21, cex=1, col="black", bg=as.factor(rownames(pca.all$x)), 
+     pch=23, cex=2, col="black", bg=as.factor(rownames(pca.all$x)), 
      xlim=c(min(pca.all$x[,1]*1.25),max(pca.all$x[,1]*1.25)), 
      ylim=c(min(pca.all$x[,2]*1.25),max(pca.all$x[,2]*1.25)), 
      main=expression(Morphometric~PCA~of~Species~of~italic(Brachymeles)), 

@@ -21,7 +21,7 @@ setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Maste
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.red.l/")
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.red.m/")
 
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.rednoTL/")
+setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL/")
 
 #mac genetic
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic")
@@ -42,6 +42,9 @@ mypal_viridis <- viridis(20,1,0,1,"D")
 mydata.filepath <- list.files(path=getwd(), pattern = "\\.csv$", full.names = TRUE)
 mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".csv$", full.names = FALSE))
 
+mydata.filepathshort[-grep("morph_fr", mydata.filepathshort)] -> mydata.filepathshort
+mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
+
 bwholder <- NA
 
 #morphological
@@ -51,11 +54,12 @@ for (a in 1:length(mydata.filepathshort)){
   #bw <- 0.90864586  #all data
   #bw <- 0.4871598 #luzon only
   #bw <- 0.9148217 #mindanao only
-  bw <- 0.5
+  #bw <- 0.5
   #bw <- 0.8817729 #all data noTL
   #bw <- 0.8503455 #all data red
   #bw <- 0.5569555 #luzon red
   #bw <- 0.930679  #mindanao red
+  bw <- 1.969154 #d^2 data
   
   #first loop to read in first dataset
   if (a == 1) {
@@ -83,9 +87,9 @@ for (a in 1:length(mydata.filepathshort)){
     print(mydata$emp.com.mean.holder[sig.hold])
     print(mydata$emp.com.mean.holder[nonsig.hold])
     
-    mydata.density <- density(mydata$emp.com.mean.holder[-as.numeric(nrow(mydata))], kernel="triangular", bw=bw, from=0)
+    mydata.density <- density(mydata$emp.com.mean.holder[-as.numeric(nrow(mydata))], kernel="triangular",bw=bw, from=0)
     
-    plot(mydata.density, col=mypal_viridis[a], main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales", xlab="Average Mahalanobis D^2 By Community", ylim=c(0,0.5), xlim=c(0,10), xaxs="i", yaxs="i")
+    plot(mydata.density, col=mypal_viridis[a], main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales", xlab="Average Mahalanobis D^2 By Community", ylim=c(0,0.15), xlim=c(0,50), xaxs="i", yaxs="i")
     #plot(sigs, col=mypal_viridis[a], ylim=c(0,0.40))
     #lines(nonsigs,lty=5, col=mypal_viridis[a])
 
@@ -120,7 +124,7 @@ for (a in 1:length(mydata.filepathshort)){
     print(mydata$emp.com.mean.holder[sig.hold])
     print(mydata$emp.com.mean.holder[nonsig.hold])
     
-    mydata.density <- density(mydata$emp.com.mean.holder[-as.numeric(nrow(mydata))], kernel="triangular", bw=bw, from=0)
+    mydata.density <- density(mydata$emp.com.mean.holder[-as.numeric(nrow(mydata))], kernel="triangular",bw=bw, from=0)
     
     lines(mydata.density, col=mypal_viridis[a])
     #lines(sigs, col=mypal_viridis[a])
@@ -132,10 +136,10 @@ for (a in 1:length(mydata.filepathshort)){
     nonsig.hold <- NA
     #print(range(c(sigs$y, nonsigs$y)))
   }
-  #lines(density(answer@sim.com.mdistances, kernel="triangular", bw=0.05, from=0), lty=5, lwd=2)
+  lines(density(answer@sim.com.mdistances, kernel="triangular", bw=bw, from=0), lty=5, lwd=1.5)
 }
 
-legend(x=12, y=0.225, legend=seq(0.10, 1.00, 0.05), col=mypal_viridis[1:length(mydata.filepathshort)], lty=1, lwd=2, xpd=TRUE)
+legend(x=40, y=0.145, legend=format(round(seq(0.05, 1.00, 0.05),2), nsmall=2), col=mypal_viridis[1:length(mydata.filepathshort)], lty=1, lwd=2, xpd=TRUE)
 
 bwholder <- NA
 
@@ -602,9 +606,9 @@ if(length(nonsig.hold) > 0)  {
 }
 
 #morphology
-lines(density(mydata.means$emp.com.mean.holder), main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales (red.m)", xlab="Average Morphological Disparity By Community", col="blue")
-if(length(sig.hold) > 0)  {
-  lines(density(mydata.means$emp.com.mean.holder[sig.hold], kernel="triangular"), col="blue")
+plot(density(mydata.means$emp.com.mean.holder), main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales (D^2 noTL)", xlab="Average Morphological Disparity By Community", col="blue")
+if(length(sig.hold[!is.na(sig.hold)]) > 0)  {
+  lines(density(mydata.means$emp.com.mean.holder[sig.hold], kernel="triangular"), col="red")
 }
 if(length(nonsig.hold) > 0)  {
   lines(density(mydata.means$emp.com.mean.holder[nonsig.hold], kernel="triangular"), col="blue", lty=5)
