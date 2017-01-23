@@ -5,6 +5,7 @@ library(corrplot)
 library(Hmisc)
 library(maptools)
 library(HDMD)
+#-----------------------------------------------------------------------------------------
 
 #create a new class
 setClass(Class="com_distances", representation(sim.com.distances="list", emp.com.distances="list", sim.com.mdistances="vector", emp.com.mdistances="vector"))	#use @ notation to get at individual pieces
@@ -188,7 +189,6 @@ emp.com.files <- list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS
 emp.com.files.short <- gsub("\\.csv$","",list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", pattern = "_fr.csv$", full.names = FALSE))
 
 for(a in 1:length(emp.com.files)){
-  #for (a in 1){
   #read csv file for emp_com
   emp.comm <- read.csv(file=paste0(emp.com.files[a]), header=T, row.names=1)
   #emp.com.short <- gsub("\\.csv$","",emp.comm)
