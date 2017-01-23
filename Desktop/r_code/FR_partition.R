@@ -43,13 +43,16 @@ factor_partition <- function(inputdirectory, inputfilepattern, factorby, outputd
 }
 
 #genetic data
-factor_partition("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic.fr")
+factor_partition(inputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic.fr")
 
 #morphological data
-factor_partition("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets//Morphological/com.morph.fr")
+factor_partition(inputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets//Morphological/com.morph.fr")
 
 #morphological data with noTL
-factor_partition("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.noTL", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.noTL.fr")
+factor_partition(inputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.noTL", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.noTL.fr")
 
 #raw communities
-factor_partition("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2.fr")
+factor_partition(inputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2.fr")
+
+#genetic standard data
+factor_partition(inputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic.standard", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic.standard.fr")
