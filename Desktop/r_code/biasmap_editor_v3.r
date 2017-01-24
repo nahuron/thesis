@@ -1,4 +1,4 @@
-#Bias Map Editor v2.0
+#Bias Map Editor v3.0
 
 comchecker <- function(com, comextents, biasfile, specieswithcoords, subset=1:nrow(com), writeCSV=FALSE, writepath=paste(getwd(),"rev.com.matrix.csv",sep="/"))	{	#start of function
 
@@ -115,6 +115,7 @@ comchecker <- function(com, comextents, biasfile, specieswithcoords, subset=1:nr
 															}	#ends f loop
 				#reduce possible subcommunities down to only unique species groupings
 					sp.by.com <- unique(sp.by.com)
+					#print(sp.by.com)
 				
 				#pathway for evaluation of community/subcommunity grouping
 					#remove elements that contain a single species
@@ -125,7 +126,7 @@ comchecker <- function(com, comextents, biasfile, specieswithcoords, subset=1:nr
 															}	#ends h loop
 															
 								sp.by.com <- sp.by.com[!is.na(sp.by.com)]			#removes list elements of NA
-								print(sp.by.com)
+								#print(sp.by.com)
 								#print(nthcom.connections)				
 											
 					#scenario 1: sp.by.com is now empty (only entries of 1 sp)
@@ -298,6 +299,7 @@ comchecker <- function(com, comextents, biasfile, specieswithcoords, subset=1:nr
 				com.final <- matrix(com.final, ncol=ncol(com))
 				colnames(com.final) <- colnames(com)
 				rownames(com.final) <- 1:nrow(com.final)
+				com.final <- unique(com.final)
 				
 				if(writeCSV==TRUE)	{write.csv(com.final, file=as.character(writepath))}	
 				
