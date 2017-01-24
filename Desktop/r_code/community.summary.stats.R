@@ -147,47 +147,6 @@ for(z in 1:20){
 }
 
 
-##find the significant coms for D2
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL/")
-#obtain file paths
-mydata.filepath <- list.files(path=getwd(), pattern = "\\.csv$", full.names = TRUE)
-mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".csv$", full.names = FALSE))
-
-mydata.filepathshort[grep("morph_fr", mydata.filepathshort)] -> mydata.filepathshort.fr
-mydata.filepath[grep("_fr.csv", mydata.filepath)] -> mydata.filepath.fr
-
-mydata.filepathshort[-grep("morph_fr", mydata.filepathshort)] -> mydata.filepathshort
-mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
-
-d2.results <- as.list(rep(NA, length(mydata.filepathshort.fr)))
-
-for (a in 1:length(mydata.filepathshort.fr)){
-  
-  mydata <- read.csv(mydata.filepath.fr[a], header=T, row.names=1)
-  pvaluesorted <- unlist(lapply(mydata[-as.numeric(nrow(mydata)),"emp.com.mean.pvalues"], function (x) x <= 0.025 | x >= 0.975))
-  
-  sig.hold <- NA
-  nonsig.hold <- NA
-  
-  for(b in 1:length(pvaluesorted)){
-    if (pvaluesorted[b]==TRUE){
-      sig.hold <- c(sig.hold, b)
-      sig.hold <- sig.hold[!is.na(sig.hold)]
-    } 
-    else  {
-      nonsig.hold <- c(nonsig.hold, b)
-      nonsig.hold <- nonsig.hold[!is.na(nonsig.hold)]
-    }
-  }
-  
-  d2.results[[a]] <- mydata[sig.hold,]
-  
-  print(a)
-  print(mydata[sig.hold,41:43])
-  print(mydata[nonsig.hold,41:43])
-  
-}
-
 ####GENETIC DATA####
 #set working directory
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic")
