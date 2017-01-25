@@ -59,10 +59,10 @@ for(i in 1:length(colnames(sim.com.matrix)))	{
 										}
 
 #mac
-read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.fall2016.csv", header=T)->brach_loc
+read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.winter2016.csv", header=T)->brach_loc
 
 #linux
-read.csv("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.fall2016.csv", header=T)->brach_loc
+read.csv("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.winter2016.csv", header=T)->brach_loc
 
 #brach_loc <- brach_loc[brach_loc[,1]!="libayani",]
 #brach_loc <- brach_loc[brach_loc[,1]!="suluensis",]

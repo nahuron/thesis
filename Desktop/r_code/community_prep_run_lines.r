@@ -11,10 +11,10 @@ setwd("~/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geograp
 	#setClass(Class="CommunitiesStack", representation(sim.com.matrix="matrix", extent.stack="list", coms="list", com.extent="data.frame"))	#use @ notation to get at individual pieces
 
 #mac
-read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.fall2016.csv", header=T)->brachloc
+read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.winter2016.csv", header=T)->brachloc
 
 #linux
-read.csv("~/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.fall2016.csv", header=T)->brachloc
+read.csv("~/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.winter2016.csv", header=T)->brachloc
 
 #####run script for community sorter
 
@@ -121,22 +121,22 @@ connect<-comchecker(sorted2$sim.com.matrix, sorted2$com.extent, bath.clippedv3, 
 
 #####run full sorter and editor script loop
 
- setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2")
+ setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3")
  
  #linux
- setwd("~/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2")
+ setwd("~/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3")
 
-#for (aa in seq(from=1.00, to=0.05, by=-0.05))	{
-for(aa in 0.05)	{
+for (aa in seq(from=1.00, to=0.10, by=-0.05))	{
+#for(aa in 0.80)	{
 
-	print(paste0("Replicate: ", "revised_com_", as.character(aa), ".csv"))
+	print(paste0("Replicate: ", "revised_com_", as.character(format(aa, nsmall=2)), ".csv"))
 		
 	draftcom <- com.sorter(brachloc, gridsize=aa, writeCSV=T)
 	revisedcom <- comchecker(draftcom$sim.com.matrix, draftcom$com.extent, bath.clippedv3, brachloc, writeCSV=F)
 	
 	#assign(paste0("revised_com_", as.character(aa)), revisedcom)
 	
-	write.csv(revisedcom, file=paste(getwd(), paste0("revised_com_", as.character(aa), ".csv"), sep="/"))
+	write.csv(revisedcom, file=paste(getwd(), paste0("revised_com_", as.character(format(aa, nsmall=2)), ".csv"), sep="/"))
 	
 	draftcom <- {}
 	revisedcom <- {}
