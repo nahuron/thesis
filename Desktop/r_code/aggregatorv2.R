@@ -42,7 +42,12 @@ mypal_viridis <- viridis(20,1,0,1,"D")
 mydata.filepath <- list.files(path=getwd(), pattern = "\\.csv$", full.names = TRUE)
 mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".csv$", full.names = FALSE))
 
+#morphological
 mydata.filepathshort[-grep("morph_fr", mydata.filepathshort)] -> mydata.filepathshort
+mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
+
+#genetic
+mydata.filepathshort[-grep("phylo_fr", mydata.filepathshort)] -> mydata.filepathshort
 mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
 
 bwholder <- NA

@@ -261,7 +261,7 @@ allofem_l <- rep(1, times=length(brach_fr_key_l$Species))
 names(allofem_l) <- brach_fr_key_l$Species
 psv(samp=allofem_l, tree=brach)  #0.851
 
-#calculate Luzon tree PSV value
+#calculate Mindanao tree PSV value
 allofem_m <- rep(1, times=length(brach_fr_key_m$Species))
 names(allofem_m) <- brach_fr_key_m$Species
 psv(samp=allofem_m, tree=brach)  #0.739
