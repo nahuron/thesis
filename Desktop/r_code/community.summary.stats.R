@@ -92,14 +92,14 @@ plot(seq(from=0.05,to=1.00,by=0.05), mycoms.meanrichness, pch=16, col="blue",  y
 bplot(simcoms.meanrichness, pos=seq(from=0.05,to=1.00,by=0.05), add=TRUE, axes=FALSE)
 
 #plot number of communities per grid size
-plot(seq(from=0.05,to=1.00,by=0.05), mycoms.ncoms, pch=16, col="red", xlim=c(0,1.05), ylim=c(30,45), ylab="Number of Communities", xlab="Grid Size (Decimal Degrees)", main="Number of Unique Communities per\nCommunity Membership Grid Size")
+plot(seq(from=0.05,to=1.00,by=0.05), mycoms.ncoms, pch=16, col="red", xlim=c(0,1.05), ylim=c(30,40), ylab="Number of Communities", xlab="Grid Size (Decimal Degrees)", main="Number of Unique Communities per\nCommunity Membership Grid Size")
 
 #plot total number of species per grid size
 plot(seq(from=0.05,to=1.00,by=0.05), comlister.num, pch=16, col="blue", xlab="Grid Size (Decimal Degrees)", ylab="Total Number of Species", xlim=c(0,1.05), ylim=c(30,40), main="Number of Unique Species per\nCommunity Membership Grid Size")
 
 #calculate Pearson's Product Moment Correlation Coefficient
 mycoms.meanrichness.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=mycoms.meanrichness, method = "pearson")
-simcoms.meanrichness.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=simcoms.meanrichness, method = "pearson")
+simcoms.meanrichness.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=simcoms.meanrichness.means, method = "pearson")
 mycoms.ncoms.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=mycoms.ncoms, method = "pearson")
 mycoms.comlister.num.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=comlister.num, method = "pearson")
 mycoms.meanrichness.co; simcoms.meanrichness.co; mycoms.ncoms.co; mycoms.comlister.num.co
