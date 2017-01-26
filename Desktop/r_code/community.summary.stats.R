@@ -1,17 +1,38 @@
 # find out the average community size across grid sizes
 library(fields)
 
-
-test <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", pattern="[fr.csv]*$")
-test2 <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", pattern="[fr.csv]*$", full.names=TRUE)
+test <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", pattern="[fr.csv]*$")
+test2 <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", pattern="[fr.csv]*$", full.names=TRUE)
 
 test[-grep("_fr.csv", test)] -> test.short
-
 test2[-grep("_fr.csv", test2)] -> test.long
 
+comlist <- list()
+length(comlist) <- length(test.short)
 
+#total species across communities
+for (c in 1:length(test.long)){
+  read.csv(test.long[c], header=T, row.names=1)->comlist[[c]]
+  comlist[[c]] <- comlist[[c]][colnames(comlist[[c]])!="species2"]
+  comlist[[c]] <- comlist[[c]][colnames(comlist[[c]])!="species3"]
+  comlist[[c]] <- comlist[[c]][colnames(comlist[[c]])!="c.f._bonitae"]
+}
+
+comlister <- lapply(comlist, colSums)
+comlister.num <- NA
+
+for(a in 1:length(comlister)){
+  comlister.num <- c(comlister.num, (40-length(which(comlister[[a]]==0))))
+  print(comlister.num)
+  comlister.num <- comlister.num[!is.na(comlister.num)]
+  }
+
+#obtain mean sp richness per community per grid size and number of communities per grid size
 for (a in 1:length(test.long)){
   read.csv(test.long[a], header=T, row.names=1)->mycoms
+  mycoms <- mycoms[colnames(mycoms)!="species2"]
+  mycoms <- mycoms[colnames(mycoms)!="species3"]
+  mycoms <- mycoms[colnames(mycoms)!="c.f._bonitae"]
   
   if(a==1){
     mycoms.ncoms <- NA
@@ -54,7 +75,6 @@ for (a in 1:length(test.long)){
 simcoms.meanrichness.gen <- simcoms.meanrichness
 
 #simcom means of species richness
-
 simcoms.meanrichness.means <- rep(NA, times=length(simcoms.meanrichness))
 simcoms.meanrichness.sd <- rep(NA, times=length(simcoms.meanrichness))
 
@@ -64,6 +84,25 @@ for(b in 1: length(simcoms.meanrichness)){
   simcoms.meanrichness.means[b] <- mean(simcoms.meanrichness[[b]])
   simcoms.meanrichness.sd[b] <- sd(simcoms.meanrichness[[b]])
 }
+
+
+##plot some results
+#plot mean number of species per community for empirical and simulated communities
+plot(seq(from=0.05,to=1.00,by=0.05), mycoms.meanrichness, pch=16, col="blue",  ylim=c(2,5), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Mean Number of Species Per Community", main="Mean Number of Species Per Community per\nCommunity Membership Grid Size")
+bplot(simcoms.meanrichness, pos=seq(from=0.05,to=1.00,by=0.05), add=TRUE, axes=FALSE)
+
+#plot number of communities per grid size
+plot(seq(from=0.05,to=1.00,by=0.05), mycoms.ncoms, pch=16, col="red", xlim=c(0,1.05), ylim=c(30,45), ylab="Number of Communities", xlab="Grid Size (Decimal Degrees)", main="Number of Unique Communities per\nCommunity Membership Grid Size")
+
+#plot total number of species per grid size
+plot(seq(from=0.05,to=1.00,by=0.05), comlister.num, pch=16, col="blue", xlab="Grid Size (Decimal Degrees)", ylab="Total Number of Species", xlim=c(0,1.05), ylim=c(30,40), main="Number of Unique Species per\nCommunity Membership Grid Size")
+
+#calculate Pearson's Product Moment Correlation Coefficient
+mycoms.meanrichness.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=mycoms.meanrichness, method = "pearson")
+simcoms.meanrichness.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=simcoms.meanrichness, method = "pearson")
+mycoms.ncoms.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=mycoms.ncoms, method = "pearson")
+mycoms.comlister.num.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=comlister.num, method = "pearson")
+mycoms.meanrichness.co; simcoms.meanrichness.co; mycoms.ncoms.co; mycoms.comlister.num.co
 
 #determine the mean of mean morphological disparity by community
 
@@ -84,18 +123,18 @@ for (a in 1:length(morph.long)){
 }
 
 
-#plot some results
-plot(seq(from=0.05,to=1.00,by=0.05), mycoms.meanrichness, pch=16, col="blue",  ylim=c(2,5), xlim=c(0.00,1.05))
-bplot(simcoms.meanrichness, pos=seq(from=0.05,to=1.00,by=0.05), add=TRUE, axes=FALSE)
-
-plot(seq(from=0.05,to=1.00,by=0.05), mycoms.ncoms, pch=17, col="red", xlim=c(0,1.05), ylim=c(30,45), ylab="Number of Communities", xlab="Grid Size (Decimal Degrees)", main="Number of Unique Communities per\nCommunity Membership Grid Size")
+#sort out significant morphology communities
 
 results.morph <- list()
+length(results.morph) <- length(morph.short)
+
+results.morphd <- list()
 length(results.morph) <- length(morph.short)
 
 #read in FR key
 brach_fr_key <- read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/brach_FR_key.csv", header=T)
 
+#isolate the significant communities
 for(z in 1:20){
 
   read.csv(morph.long[z], header=T, row.names=1)->mymorph
@@ -136,6 +175,7 @@ for(z in 1:20){
     
     mymorph.revised <- cbind(mymorph.sig, com.fr)
     
+    
     rm(com.match.hold)
   }
   
@@ -144,6 +184,8 @@ for(z in 1:20){
   print(mymorph.sig)
   
   results.morph [[z]] <- mymorph.revised
+  results.morphd [[z]] <- mymorph.sig[,-ncol(mymorph.sig)]
+  results.morphd [[z]] <- results.morphd[[z]][,-ncol(results.morphd[[z]])]
 }
 
 

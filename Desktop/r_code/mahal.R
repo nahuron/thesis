@@ -119,7 +119,6 @@ rownames(d2.full$distance) <- unique(brach_morph_final$Species);colnames(d2.full
 #-----------------------------------------------------------------------------------------
 #Obtain Community Means and test against nulls
 
-
 com.morph.disp <- function(empirical, simulated, mahalmatrix){
   
   #create list objects of the intracommunity distances and mean intracommunity distances
@@ -181,12 +180,11 @@ com.morph.disp <- function(empirical, simulated, mahalmatrix){
   
 }
 
-
 #-----------------------------------------------------------------------------------------
 #Loop to Run!
 
-emp.com.files <- list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", pattern = "_fr.csv$", full.names = TRUE)
-emp.com.files.short <- gsub("\\.csv$","",list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2", pattern = "_fr.csv$", full.names = FALSE))
+emp.com.files <- list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", pattern = "_fr.csv$", full.names = TRUE)
+emp.com.files.short <- gsub("\\.csv$","",list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", pattern = "_fr.csv$", full.names = FALSE))
 
 for(a in 1:length(emp.com.files)){
   #read csv file for emp_com
@@ -250,7 +248,7 @@ for(a in 1:length(emp.com.files)){
   #write.csv(emp.com.newdata, paste0("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/", emp.com.files.short[a], "_morph.csv"))
   
   #noTL
-  write.csv(emp.com.newdata, paste0("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/", gsub("_fr","_mahal_fr",emp.com.files.short[a]), "_morph.csv"))
+  write.csv(emp.com.newdata, paste0("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/", gsub("_fr","_mahal",emp.com.files.short[a]), "_morph.csv"))
   
   #rm(list=c("emp.com.newdata", "emp.com.mean.pvalues", "emp.com.mean.holder", "com.morph.holder", "emp.comm"))
   

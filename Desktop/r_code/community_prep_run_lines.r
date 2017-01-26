@@ -19,7 +19,7 @@ read.csv("~/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geog
 #####run script for community sorter
 
 #mac
-sorted2 <- com.sorter(brachloc, gridsize=0.05, writeCSV=T, writepath=paste("/Users/nicholashuron/Desktop/niche_overlap_tests/test2","sim.com.matrix.csv",sep="/"))
+sorted2 <- com.sorter(brachloc, gridsize=0.55, writeCSV=T, writepath=paste("/Users/nicholashuron/Desktop/niche_overlap_tests/test2","sim.com.matrix.csv",sep="/"))
 
 #linux
 sorted2 <- com.sorter(brachloc, gridsize=0.05, writeCSV=T, writepath=paste("~/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community","sim_com_matrix_0.95.csv",sep="/"))
