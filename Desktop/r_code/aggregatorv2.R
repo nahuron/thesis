@@ -9,25 +9,12 @@ library(scales)
 library(TeachingDemos)
 
 #mac morphological
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph/")
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.l/")
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.m/")
-
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.noTL/")
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.noTL.l/")
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.noTL.m/")
-
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.red/")
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.red.l/")
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.red.m/")
-
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL/")
+setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL.fr/")
 
 #mac genetic
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic")
-
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic.l")
-
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic.m")
 
 #linux morphological
@@ -46,6 +33,16 @@ mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".c
 mydata.filepathshort[-grep("morph_fr", mydata.filepathshort)] -> mydata.filepathshort
 mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
 
+#luzon only
+#morphological
+mydata.filepathshort[-grep("morph_fr_M", mydata.filepathshort)] -> mydata.filepathshort
+mydata.filepath[-grep("morph_fr_M.csv", mydata.filepath)] -> mydata.filepath
+
+#mindanao only
+#morphological
+mydata.filepathshort[-grep("morph_fr_L", mydata.filepathshort)] -> mydata.filepathshort
+mydata.filepath[-grep("morph_fr_L.csv", mydata.filepath)] -> mydata.filepath
+
 #genetic
 mydata.filepathshort[-grep("phylo_fr", mydata.filepathshort)] -> mydata.filepathshort
 mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
@@ -60,10 +57,6 @@ for (a in 1:length(mydata.filepathshort)){
   #bw <- 0.4871598 #luzon only
   #bw <- 0.9148217 #mindanao only
   #bw <- 0.5
-  #bw <- 0.8817729 #all data noTL
-  #bw <- 0.8503455 #all data red
-  #bw <- 0.5569555 #luzon red
-  #bw <- 0.930679  #mindanao red
   bw <- 1.969154 #d^2 data
   
   #first loop to read in first dataset
@@ -94,7 +87,7 @@ for (a in 1:length(mydata.filepathshort)){
     
     mydata.density <- density(mydata$emp.com.mean.holder[-as.numeric(nrow(mydata))], kernel="triangular",bw=bw, from=0)
     
-    plot(mydata.density, col=mypal_viridis[a], main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales", xlab="Average Mahalanobis D^2 By Community", ylim=c(0,0.15), xlim=c(0,50), xaxs="i", yaxs="i")
+    plot(mydata.density, col=mypal_viridis[a], main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales", xlab="Average Mahalanobis D^2 By Community", ylim=c(0,0.25), xlim=c(0,50), xaxs="i", yaxs="i")
     #plot(sigs, col=mypal_viridis[a], ylim=c(0,0.40))
     #lines(nonsigs,lty=2, col=mypal_viridis[a])
 
@@ -631,11 +624,12 @@ legend(x=0.55, y=12.5, legend=c("All", "Significant", "N.S.", "Random \nDispersi
 
 
 #morphology
-plot(density(mydata.means$emp.com.mean.holder),ylim=c(0,4), main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales (D^2 noTL)", xlab="Average Morphological Disparity By Community", col="black")
+plot(density(mydata.means$emp.com.mean.holder),ylim=c(0,4), xlim=c(3,5), main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales (D^2 noTL)", xlab="Average Morphological Disparity By Community", col="black")
 if(length(sig.hold[!is.na(sig.hold)]) > 0)  {
   lines(density(mydata.means$emp.com.mean.holder[sig.hold], kernel="triangular"), col="blue")
 }
 if(length(nonsig.hold) > 0)  {
   lines(density(mydata.means$emp.com.mean.holder[nonsig.hold], kernel="triangular"), col="red", lty=4)
 }
-legend(x=3.1, y=3.5, legend=c("All", "Significant", "N.S.", "Random \nDispersion"), lty=c(1,1,4,2), col=c("black","blue","red", "black"), cex=0.75)
+abline(v=4.6443394, lty=2)
+legend(x=3.1, y=3.5, legend=c("All", "Significant", "N.S.", "Null Community Mean"), lty=c(1,1,4,2), col=c("black","blue","red", "black"), cex=0.75)
