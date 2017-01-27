@@ -222,8 +222,8 @@ write.csv(revised.niche.overlaps, file="/Users/nicholashuron/Desktop/niche_overl
 
 
 
-#EVALUATE BY FR
-#read in FR key
+#EVALUATE BY PAIC
+#read in PAIC key
 brach_fr_key <- read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/brach_FR_key.csv", header=T)
 
 #remove as yet undescribed species

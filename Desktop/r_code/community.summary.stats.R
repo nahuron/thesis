@@ -52,8 +52,8 @@ for (a in 1:length(test.long)){
     mycoms.meanrichness <- c(mycoms.meanrichness, mean(rowSums(mycoms)))
     mycoms.meanrichness <- mycoms.meanrichness[-is.na(mycoms.meanrichness)]
     
-    sim.com.hold <- replicate(1000, as.matrix(com.simulator(2, 5, nrow(mycoms), sort(unique(brach_loc$Species)))))
-    simcoms.meanrichness[[a]] <- apply(X=sim.com.hold, MARGIN = 3, FUN = function(x) mean(rowSums(x)))
+    #sim.com.hold <- replicate(1000, as.matrix(com.simulator(2, 5, nrow(mycoms), sort(unique(brach_loc$Species)))))
+    #simcoms.meanrichness[[a]] <- apply(X=sim.com.hold, MARGIN = 3, FUN = function(x) mean(rowSums(x)))
     
   }
   else{
@@ -66,8 +66,8 @@ for (a in 1:length(test.long)){
     print(mean(rowSums(mycoms))) 
     mycoms.meanrichness <- c(mycoms.meanrichness, mean(rowSums(mycoms)))
     
-    sim.com.hold <- replicate(1000, as.matrix(com.simulator(2, 5, nrow(mycoms), sort(unique(brach_loc$Species)))))
-    simcoms.meanrichness[[a]] <- apply(X=sim.com.hold, MARGIN = 3, FUN = function(x) mean(rowSums(x)))
+    #sim.com.hold <- replicate(1000, as.matrix(com.simulator(2, 5, nrow(mycoms), sort(unique(brach_loc$Species)))))
+    #simcoms.meanrichness[[a]] <- apply(X=sim.com.hold, MARGIN = 3, FUN = function(x) mean(rowSums(x)))
     
   }
 }
@@ -197,6 +197,10 @@ setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Maste
 mydata.filepath <- list.files(path=getwd(), pattern = "\\.csv$", full.names = TRUE)
 mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".csv$", full.names = FALSE))
 
+#genetic
+mydata.filepathshort[-grep("phylo_fr", mydata.filepathshort)] -> mydata.filepathshort
+mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
+
 {results.psv <- list()
 length(results.psv) <- length(mydata.filepathshort)
 results.mpd <- list()
@@ -209,7 +213,6 @@ brach_fr_key <- read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Ni
 
 #PSV
 for (e in 1:length(mydata.filepathshort)){
-  
   mydata <- read.csv(mydata.filepath[e], header=T, row.names=1)
   names(results.psv)[e] <- paste0("PSV_",mydata.filepathshort[e])
   
@@ -231,23 +234,26 @@ for (e in 1:length(mydata.filepathshort)){
     com.fr <- rep(NA, times=nrow(mydata.sig))
     for (a in 1:(nrow(mydata.sig))) { #isolate row of interest
       com.match.hold <- 0
-      for (b in 1:(ncol(mydata.sig)-2)) { #isolate cell within row of interest
+      for (b in 1:(ncol(mydata.sig)-3)) { #isolate cell within row of interest
         if (mydata.sig[a,b]==1){
           m <- match(as.character(colnames(mydata.sig[a,][b])), as.character(brach_fr_key[,1]))
           com.match.hold <- c(com.match.hold, as.character(brach_fr_key$FR.code[m]))
           com.match.hold <- com.match.hold[com.match.hold!=0]
           com.match.hold <- com.match.hold[!is.na(com.match.hold)]
+          com.match.hold <- unique(com.match.hold)
           print(com.match.hold)
         }
       }
       com.match.hold <- unique(com.match.hold)
-      print(com.match.hold)
+      #print(com.match.hold)
       if (length(com.match.hold) > 1 ) {
-        print(paste0("Community ", rownames(mydata.sig)[a], " spans more than 1 Faunal Regions!"))
-        print(com.match.hold)
+        #print(paste0("Community ", rownames(mydata.sig)[a], " spans more than 1 Faunal Regions!"))
+        #print(com.match.hold)
         com.fr[a] <- as.character(length(com.match.hold))
       }
-      else if (length(com.match.hold == 1)) {com.fr[a] <- as.character(brach_fr_key$FR.code[m])}
+      else if (length(com.match.hold == 1)) {
+        com.fr[a] <- as.character(brach_fr_key$FR.code[m])
+        }
       
       mydata.revised <- cbind(mydata.sig, com.fr)
       
@@ -283,7 +289,7 @@ for (e in 1:length(mydata.filepathshort)){
     com.fr <- rep(NA, times=nrow(mydata.sig))
     for (a in 1:(nrow(mydata.sig))) { #isolate row of interest
       com.match.hold <- 0
-      for (b in 1:(ncol(mydata.sig)-2)) { #isolate cell within row of interest
+      for (b in 1:(ncol(mydata.sig)-3)) { #isolate cell within row of interest
         if (mydata.sig[a,b]==1){
           m <- match(as.character(colnames(mydata.sig[a,][b])), as.character(brach_fr_key[,1]))
           com.match.hold <- c(com.match.hold, as.character(brach_fr_key$FR.code[m]))
@@ -337,7 +343,7 @@ for (e in 1:length(mydata.filepathshort)){
     com.fr <- rep(NA, times=nrow(mydata.sig))
     for (a in 1:(nrow(mydata.sig))) { #isolate row of interest
       com.match.hold <- 0
-      for (b in 1:(ncol(mydata.sig)-2)) { #isolate cell within row of interest
+      for (b in 1:(ncol(mydata.sig)-3)) { #isolate cell within row of interest
         if (mydata.sig[a,b]==1){
           m <- match(as.character(colnames(mydata.sig[a,][b])), as.character(brach_fr_key[,1]))
           com.match.hold <- c(com.match.hold, as.character(brach_fr_key$FR.code[m]))
@@ -370,7 +376,7 @@ for (e in 1:length(mydata.filepathshort)){
 
 lengths(results.psv); lengths(results.mpd); lengths(results.mntd)
 
-
+#obtain the means for each metric and grid size
 mydata.all <- rep(NA, 7)
 mydata.sesmpd <- rep(NA, 20)
 mydata.sesmntd <- rep(NA, 20)
@@ -380,20 +386,34 @@ mydata.sesmntd2 <- rep(NA, 20)
 mydata.psv2 <- rep(NA, 20)
 
 for (e in 1:length(mydata.filepath)){
+  #for (e in 1){
   
   mydata <- read.csv(mydata.filepath[e], header=T, row.names=1)
   mydata <- mydata[,!(names(mydata) %in% ("com.fr"))]
-  #print(mydata[,(ncol(mydata)-6):ncol(mydata)])
-  mydata.psv [e] <- length(which(mydata[,(ncol(mydata)-2)]<0.85))
-  mydata.psv2 [e] <- length(which(mydata[,(ncol(mydata)-2)]>0.85))
+  print(mydata[,(ncol(mydata)-6):ncol(mydata)])
+  #mydata.psv [e] <- length(which(mydata[,(ncol(mydata)-2)]<0.85))
+  #mydata.psv2 [e] <- length(which(mydata[,(ncol(mydata)-2)]>0.85))
   
   mydata.all <- rbind(mydata[nrow(mydata),(ncol(mydata)-6):ncol(mydata)], mydata.all)
   
 }
 
+#remove NA row
 mydata.all <- mydata.all[-nrow(mydata.all),]
+#flip the row order so that grid size increases from top to bottom
+mydata.all <- mydata.all[ nrow(mydata.all):1, ]
+#label row names with grid size
+rownames(mydata.all) <- seq(0.05,1.00,by=0.05)
 
+#test correlation with metrics and gridsizes
+psv.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=mydata.all$psv, method = "pearson")
+ses.mpd.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=mydata.all$ses.mpd, method = "pearson")
+ses.mntd.co <- cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=mydata.all$ses.mntd, method = "pearson")
 
+#test correlation with metrics and mean number of species per community
+psv.coms.co <- cor.test(x=mycoms.meanrichness, y=mydata.all$psv, method = "pearson")
+ses.mpd.coms.co <- cor.test(x=mycoms.meanrichness, y=mydata.all$ses.mpd, method = "pearson")
+ses.mntd.coms.co <- cor.test(x=mycoms.meanrichness, y=mydata.all$ses.mntd, method = "pearson")
 
 
 ####ENM DATA####

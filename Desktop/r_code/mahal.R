@@ -13,23 +13,6 @@ setClass(Class="com_distances", representation(sim.com.distances="list", emp.com
 #set working space mac
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology")
 
-
-#Old Version of reading in data
-#-----------------------------------------------------------------------------------------
-#load in dataset 1 (here it is the morphometric data provided via CDS per individual with species identifier): 17
-read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v6_rawmeans.txt", header=T, fill=T, nrows=600) -> brach_morph
-
-#load in no TL version of dataset: 16
-read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v6_rawmeans_noTL.txt", header=T, fill=T, nrows=600) -> brach_morph
-
-#load in absolutely reduced version of dataset: 10
-read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v5_rawmeans_reduced.txt", header=T, fill=T, nrows=600) -> brach_morph
-
-read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v5_rawmeans_reduced_noTL.txt", header=T, fill=T, nrows=600) -> brach_morph
-
-#reduced noTL
-read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v5_rawmeans_reduced.txt", header=T, fill=T, nrows=600) -> brach_morph
-brach_morph <- brach_morph[!colnames(brach_morph) %in% "TL.HL"]
 #-----------------------------------------------------------------------------------------
 
 #New Method for reading in data
@@ -105,8 +88,6 @@ for(b in 2:ncol(brach_morph_final)){
     brach_morph_final[,b] <- log(brach_morph_final[,b]+1)
   }
 }
-
-
 
 #-----------------------------------------------------------------------------------------
 #alternative to PC loading methods that uses Mahalanobis D^2 distances, which are adjusted for sample sizes and variances

@@ -36,9 +36,6 @@ for (c in 1:length(mydata.filepath))  {
   #create object for communities to have FR code
   com.fr <- rep(NA, times=nrow(mydata))
   
-  #check the columns of mydata to figure out which ones correspond to species
-  
-  
 #Iterate Matching and coding in com.fr object
 for (a in 1:(nrow(mydata)-1)) { #isolate row of interest
     com.match.hold <- 0
