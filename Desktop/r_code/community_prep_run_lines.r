@@ -248,7 +248,7 @@ brach_fr_key_l <- na.omit(brach_fr_key_l)
 brach_fr_key_l <- droplevels.data.frame(brach_fr_key_l)
 
 #isolating results to just mindanao species
-#pare down to Luzon
+#pare down to mindanao
 brach_fr_key_m <- brach_fr_key[brach_fr_key$FR.code=="M",]
 
 #remove species not from PHL
