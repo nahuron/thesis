@@ -28,21 +28,20 @@ community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuro
 
 #loop that runs all metrics and populates results object
 for (a in 1:length(community.files))	{
-#for (a in 1:1)	{
 	#read in community replicate
   emp.comm <- read.csv(paste0(community.files[a]), header=T, row.names=1)
   emp.comm <- emp.comm[lapply(emp.comm, class)!="factor"]
-	print(paste0("There are ", nrow(emp.comm), " original empirical communities"))
+	print(community.files.short[a])
+  print(paste0("There are ", nrow(emp.comm), " original empirical communities"))
 	
 	#remove species without phy data
 	emp.comm <- emp.comm[colnames(emp.comm)!="species2"]; emp.comm <- emp.comm[colnames(emp.comm)!="dalawangdaliri"]; emp.comm <- emp.comm[colnames(emp.comm)!="c.f..bonitae"];emp.comm <- emp.comm[colnames(emp.comm)!="vermis"];emp.comm <- emp.comm[colnames(emp.comm)!="vindumi"]; emp.comm <- emp.comm[colnames(emp.comm)!="wrighti"];emp.comm <- emp.comm[colnames(emp.comm)!="suluensis"];#emp.comm <- emp.comm[colnames(emp.comm)!="libayani"]
 	emp.comm <- emp.comm[rowSums(emp.comm)>=2,]
 	print(paste0("There are ", nrow(emp.comm), " empirical communities"))
-	print(emp.comm)
+	#print(emp.comm)
 	
 	#add the number of species per community to each row in output list
 	results.list[[a]]$n.coms[1:nrow(emp.comm)] <- rowSums(emp.comm)
-	print(rowSums(emp.comm))
 	
 	#conduct SES.MPD with modified null
 	if(length(grep("_L", community.files.short[a]))>=1) {
@@ -56,8 +55,8 @@ for (a in 1:length(community.files))	{
 	}
 	
 	#populate output list with SES.MPD and p-value for each community
-	results.list[[a]]$ses.mpd[1:length(ses.mpd.hold[[4]]$mpd.obs)] <- ses.mpd.hold[[4]]$mpd.obs.z
-	results.list[[a]]$ses.mpd.p[1:length(ses.mpd.hold[[4]]$mpd.obs.p)] <- ses.mpd.hold[[4]]$mpd.obs.p
+	results.list[[a]]$ses.mpd[1:length(ses.mpd.hold$results.by.com$mpd.obs)] <- ses.mpd.hold$results.by.com$mpd.obs.z
+	results.list[[a]]$ses.mpd.p[1:length(ses.mpd.hold$results.by.com$mpd.obs.p)] <- ses.mpd.hold$results.by.com$mpd.obs.p
 	
 	#conduct SES.MNTD with modified null
 	if(length(grep("_L", community.files.short[a]))>=1) {
@@ -71,8 +70,8 @@ for (a in 1:length(community.files))	{
 	}
 	
 	#populate output list with SES.MNTD and p-value for each community
-	results.list[[a]]$ses.mntd[1:length(ses.mntd.hold[[4]]$mntd.obs)] <- ses.mntd.hold[[4]]$mntd.obs.z
-	results.list[[a]]$ses.mntd.p[1:length(ses.mntd.hold[[4]]$mntd.obs.p)] <- ses.mntd.hold[[4]]$mntd.obs.p
+	results.list[[a]]$ses.mntd[1:length(ses.mntd.hold$results.by.com$mntd.obs)] <- ses.mntd.hold$results.by.com$mntd.obs.z
+	results.list[[a]]$ses.mntd.p[1:length(ses.mntd.hold$results.by.com$mntd.obs.p)] <- ses.mntd.hold$results.by.com$mntd.obs.p
 	
 	#calculate PSV for empirical community and populate output list
 	psv.bycom.hold <- psv(emp.comm, brach)
@@ -128,7 +127,6 @@ for (a in 1:length(community.files))	{
 
 #loop to write the resulting metric values into objects (csv files)
 for (c in 1:length(results.list))	{
-#for (c in 1)	{
   emp.comm <- read.csv(paste0(community.files[c]), header=T, row.names=1)
   emp.comm <- emp.comm[lapply(emp.comm, class)!="factor"]
   #remove species without phy data

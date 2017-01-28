@@ -65,15 +65,16 @@ read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Ma
 read.csv("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/locality_data/Brachymeles.unique.locality.winter2016.csv", header=T)->brach_loc
 
 #brach_loc <- brach_loc[brach_loc[,1]!="libayani",]
-#brach_loc <- brach_loc[brach_loc[,1]!="suluensis",]
-#brach_loc <- brach_loc[brach_loc[,1]!="dalawangdaliri",]
 brach_loc <- brach_loc[brach_loc[,1]!="species2",]
 brach_loc <- brach_loc[brach_loc[,1]!="species3",]
 brach_loc <- brach_loc[brach_loc[,1]!="c.f._bonitae",]
-#brach_loc <- brach_loc[brach_loc[,1]!="vermis",]
-#brach_loc <- brach_loc[brach_loc[,1]!="vindumi",]
-#brach_loc <- brach_loc[brach_loc[,1]!="wrighti",]
 
+#remove for genetic
+brach_loc <- brach_loc[brach_loc[,1]!="vermis",]
+brach_loc <- brach_loc[brach_loc[,1]!="vindumi",]
+brach_loc <- brach_loc[brach_loc[,1]!="wrighti",]
+brach_loc <- brach_loc[brach_loc[,1]!="dalawangdaliri",]
+brach_loc <- brach_loc[brach_loc[,1]!="suluensis",]
 brach_loc$Species <- droplevels(brach_loc$Species)
 
 #luzon only

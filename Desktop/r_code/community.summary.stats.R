@@ -416,6 +416,69 @@ ses.mpd.coms.co <- cor.test(x=mycoms.meanrichness, y=mydata.all$ses.mpd, method 
 ses.mntd.coms.co <- cor.test(x=mycoms.meanrichness, y=mydata.all$ses.mntd, method = "pearson")
 
 
+
+
+
+
+library(viridis)
+
+mypal_viridis <- viridis(20,1,0,1,"D")
+mypal_viridis_t <- viridis(20,0.5,0,1,"D")
+
+setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic")
+
+#obtain file paths
+mydata.filepath <- list.files(path=getwd(), pattern = "\\.csv$", full.names = TRUE)
+mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".csv$", full.names = FALSE))
+
+#genetic
+mydata.filepathshort[-grep("phylo_fr", mydata.filepathshort)] -> mydata.filepathshort
+mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
+
+#objects to store results
+results.gen <- list()
+length(results.gen) <- as.numeric(length(mydata.filepathshort))
+
+#loop to read in all grid size objects to a list
+for (a in 1: length(mydata.filepathshort)){
+  mydata <- read.csv(mydata.filepath[a], header=T, row.names=1)
+  results.gen [[a]] <- mydata[colnames(mydata) %in% c("ses.mpd",	"ses.mpd.p",	"ses.mntd",	"ses.mntd.p",	"psv",	"psv.p",	"n.coms")]
+  
+}
+
+results.gen.means <- as.data.frame(matrix(nrow=length(results.gen),ncol=length(c("ses.mpd",	"ses.mpd.p",	"ses.mntd",	"ses.mntd.p",	"psv",	"psv.p",	"n.coms"))))
+colnames(results.gen.means) <- c("ses.mpd",	"ses.mpd.p",	"ses.mntd",	"ses.mntd.p",	"psv",	"psv.p",	"n.coms")
+#loop to get the means out of all objects in results.gen
+for (b in 1:length(results.gen)){
+  results.gen.means[b,] <- results.gen[[b]][as.numeric(nrow(results.gen[[b]])),]
+  print(results.gen[[b]])
+  results.gen[[b]] <- results.gen[[b]][-as.numeric(nrow(results.gen[[b]])),]
+}
+
+plot(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mpd, pch=16, col="blue",  ylim=c(-4,4), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
+for(c in 1:length(results.gen)){
+  boxplot(results.gen[[c]]$ses.mpd, border="blue", boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
+}
+points(rep(0.05,34), results.gen[[1]]$ses.mpd)
+
+points(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mntd, pch=16, col="red",  ylim=c(-4,4), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
+for(c in 1:length(results.gen)){
+  boxplot(results.gen[[c]]$ses.mntd, border="red", boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
+}
+
+plot(seq(from=0.05,to=1.00,by=0.05), results.gen.means$psv, pch=16, col="black",  ylim=c(0,1), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="PSV")
+for(c in 1:length(results.gen)){
+  boxplot(results.gen[[c]]$psv, border="black", boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
+}
+
+
+
+
+
+
+
+
+
 ####ENM DATA####
 setwd("/Users/nicholashuron/Desktop/niche_overlap_tests/test2")
 

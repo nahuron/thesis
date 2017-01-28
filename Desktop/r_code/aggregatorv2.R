@@ -24,6 +24,7 @@ setwd("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Dat
 
 
 mypal_viridis <- viridis(20,1,0,1,"D")
+ <- viridis(20,1,0,1,"D")
   
 #obtain file paths
 mydata.filepath <- list.files(path=getwd(), pattern = "\\.csv$", full.names = TRUE)
@@ -267,8 +268,6 @@ for (a in 1:length(mydata.filepathshort)){
     print(a)
     print(mydata$ses.mpd[sig.hold])
     print(mydata$ses.mpd[nonsig.hold])
-    print(mydata$n.coms[sig.hold])
-    print(mydata$n.coms[nonsig.hold])
     
     if(length(sig.hold[!is.na(sig.hold)])>=1 & length(nonsig.hold[!is.na(nonsig.hold)])>=1)  {
     
@@ -322,8 +321,6 @@ for (a in 1:length(mydata.filepathshort)){
     print(a)
     print(mydata$ses.mpd[sig.hold])
     print(mydata$ses.mpd[nonsig.hold])
-    print(mydata$n.coms[sig.hold])
-    print(mydata$n.coms[nonsig.hold])
     
     if(length(sig.hold[!is.na(sig.hold)])>=1 & length(nonsig.hold[!is.na(nonsig.hold)])>=1)  {
       
@@ -416,7 +413,7 @@ for (a in 1:length(mydata.filepathshort)){
       print(range(mydata.density$y))
       print(range(mydata.density$x))
       
-      plot(mydata.density, col=mypal_viridis[a], ylim=c(0,1), xlim=c(-6,6), main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales", xlab="Standardized Effect Size Mean Nearest Taxon Distance")
+      plot(mydata.density, col=mypal_viridis[a], ylim=c(0,1), xlim=c(-6,6), main="Density Curves for Empirical Communities \nAcross a Range of Spatial Scales (L PAIC)", xlab="Standardized Effect Size Mean Nearest Taxon Distance")
       
     }
   }
@@ -493,7 +490,7 @@ for (a in 1:length(mydata.filepathshort)){
   }
 }
 abline(v=0, lty=2)
-legend(x=3.5, y=0.90, legend=format(round(seq(0.05, 1.00, 0.05),2), nsmall=2), col=mypal_viridis[1:length(mydata.filepathshort)], lty=1, lwd=2, xpd=TRUE)
+legend(x=3.5, y=0.95, legend=format(round(seq(0.05, 1.00, 0.05),2), nsmall=2), col=mypal_viridis[1:length(mydata.filepathshort)], lty=1, lwd=2, xpd=TRUE)
 
 mydata.means <- rep(NA, times=length(35:(ncol(mydata)-1)))
 
