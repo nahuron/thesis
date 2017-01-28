@@ -25,9 +25,14 @@ community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuro
 	results.list <- list()
 	for(b in 1:length(community.files.short)){results.list[[b]] <- results.df}
 	rm(results.df)
+	
+	results.tails <- data.frame(matrix(data=NA, ncol=6, nrow=length(community.files.short)))
+	colnames(results.tails) <- c("ses.mpd.lower", "ses.mpd.upper", "ses.mntd.lower", "ses.mntd.upper", "psv.lower", "psv.upper")
+	rownames(results.tails) <- community.files.short
 
 #loop that runs all metrics and populates results object
 for (a in 1:length(community.files))	{
+  #for (a in 1)	{
 	#read in community replicate
   emp.comm <- read.csv(paste0(community.files[a]), header=T, row.names=1)
   emp.comm <- emp.comm[lapply(emp.comm, class)!="factor"]
@@ -99,22 +104,17 @@ for (a in 1:length(community.files))	{
 	
 	#ses.mpd mean
 	results.list[[a]]$ses.mpd[1+nrow(emp.comm)] <- ses.mpd.hold$mean.mpd.obs.z
-	
 	#ses.mntd mean
 	results.list[[a]]$ses.mntd[1+nrow(emp.comm)] <- ses.mntd.hold$mean.mntd.obs.z
-
 	#psv mean
 	results.list[[a]]$psv[1+nrow(emp.comm)] <- psv.hold$mean.obs
-	
 	#species richness mean
 	results.list[[a]]$n.coms[1+nrow(emp.comm)] <- mean(rowSums(emp.comm))
 	
 	#ses.mpd.p for ses.mpd mean
 	results.list[[a]]$ses.mpd.p[1+nrow(emp.comm)] <- 1 - mean(ses.mpd.hold$mpd.rand.z > ses.mpd.hold$mean.mpd.obs.z)
-	
 	#ses.mntd.p for ses.mntd mean
 	results.list[[a]]$ses.mntd.p[1+nrow(emp.comm)] <- 1 - mean(ses.mntd.hold$mntd.rand.z > ses.mntd.hold$mean.mntd.obs.z)
-	
 	#psv.p for psv mean
 	results.list[[a]]$psv.p[1+nrow(emp.comm)] <- 1-mean(psv.hold$null.means > psv.hold$mean.obs)
 	
@@ -122,9 +122,20 @@ for (a in 1:length(community.files))	{
 	results.list[[a]] <- results.list[[a]][!rowSums(is.na(results.list[[a]])) > 0,]
 	print(results.list[[a]][!rowSums(is.na(results.list[[a]])) > 0,])
 	
+	#store the various cutoff values for being in the tails of the null distribution (based on a two-tailed H at alpha=0.05)
+	results.tails$ses.mpd.lower[a] <- sort(ses.mpd.hold$mpd.rand.z)[25]
+	results.tails$ses.mpd.upper[a] <- sort(ses.mpd.hold$mpd.rand.z)[975]
+	results.tails$ses.mntd.lower[a] <- sort(ses.mntd.hold$mntd.rand.z)[25]
+	results.tails$ses.mntd.upper[a] <- sort(ses.mntd.hold$mntd.rand.z)[975]
+	results.tails$psv.lower[a] <- sort(psv.hold$null.means)[25]
+	results.tails$psv.upper[a] <- sort(psv.hold$null.means)[975]
+	
 	rm(list=c("emp.comm", "ses.mpd.hold", "ses.mntd.hold", "psv.hold", "psv.bycom.hold", "psv.pvalues.hold"))
 										}
 
+#save the results.tails object for review in figures
+save(results.tails, file="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/results.tails.rda")
+	
 #loop to write the resulting metric values into objects (csv files)
 for (c in 1:length(results.list))	{
   emp.comm <- read.csv(paste0(community.files[c]), header=T, row.names=1)
