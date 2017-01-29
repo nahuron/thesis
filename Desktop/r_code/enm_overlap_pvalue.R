@@ -4,36 +4,6 @@ setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Maste
 #linux
 setwd("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic")
 
-#NST
-pvalues.nst <- read.csv("pvalues.netrev.csv", header=T)
-
-NET_names <- sort(pvalues.nst[,1])
-
-sp_names <- sort(unique(unlist(strsplit(gsub("NET_","",NET_names),split = "_vs_"))))
-
-NET_sig <- matrix(NA, nrow=length(sp_names), ncol=length(sp_names))
-colnames(NET_sig) <- sp_names
-rownames(NET_sig) <- sp_names
-
-#D loop!
-for (a in 1:nrow(pvalues.nst))  {
-#for (a in 15)  {
-
-	sp_name_holder <- unlist(strsplit(gsub("NET_","",NET_names[a]),split = "_vs_"))
-	print(sp_name_holder)
-	
-	results_holder <- pvalues.nst[pvalues.nst[,1]==NET_names[a],]
-	print(results_holder)
-	
-	#D metric
-	if(results_holder$Dpvalue <= 0.025)	{
-		NET_sig[(rownames(NET_sig)==sp_name_holder[2]), (colnames(NET_sig)==sp_name_holder[1])] <- 1
-	}
-	else if(results_holder$Dpvalue >= 0.025 & results_holder$Dpvalue <= 0.975)	{
-		NET_sig[(rownames(NET_sig)==sp_name_holder[2]), (colnames(NET_sig)==sp_name_holder[1])] <- 0
-	}
-}
-
 #BST (row is sp a, col is background of sp b)
 pvalues.bst <- read.csv("pvalues.bst.csv", header=T)
 
@@ -50,7 +20,7 @@ rownames(BST_sig_d) <- sp_names
 colnames(BST_sig_i) <- sp_names
 rownames(BST_sig_i) <- sp_names
 
-
+#loop that determines the significance and codes the correct cell as -1, 0, or 1
 for (a in 1:length(BST_names))  {
 #  for (a in 1)  {
   
@@ -92,9 +62,9 @@ write.csv(BST_sig_i, file="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, N
     
 }
 
-
+#plots for BST
 #first loop to read in first dataset
-  pvaluesorted <- unlist(lapply(pvalues.bst[-as.numeric(nrow(pvalues.bst)),"Dpvalue"], function (x) x <= 0.025 | x >= 0.975))
+{  pvaluesorted <- unlist(lapply(pvalues.bst[-as.numeric(nrow(pvalues.bst)),"Dpvalue"], function (x) x <= 0.025 | x >= 0.975))
   
   sig.hold <- NA
   nonsig.hold <- NA
@@ -109,7 +79,7 @@ write.csv(BST_sig_i, file="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, N
       nonsig.hold <- nonsig.hold[!is.na(nonsig.hold)]
     }
   }
-  
+
   sigs <- density(pvalues.bst$EmpD[sig.hold], kernel="triangular", from=0, to=1)
   nonsigs <- density(pvalues.bst$EmpD[nonsig.hold], kernel="triangular", from=0, to=1)
   print(pvalues.bst$EmpD[sig.hold])
@@ -153,7 +123,49 @@ hist(pvalues.bst$EmpI[nonsig.hold], col=rgb(1,0,0,0.75), add=TRUE, freq=FALSE)
 lines(nonsigs, lty=5)
 lines(sigs)
 
+}
+
   
+#NST
+  pvalues.nst <- read.csv("pvalues.netrev.csv", header=T)
+  
+  NET_names <- sort(pvalues.nst[,1])
+  
+  sp_names <- sort(unique(unlist(strsplit(gsub("NET_","",NET_names),split = "_vs_"))))
+  
+  NET_sig <- matrix(NA, nrow=length(sp_names), ncol=length(sp_names))
+  colnames(NET_sig) <- sp_names
+  rownames(NET_sig) <- sp_names
+  
+  #loop!
+  for (a in 1:length(NET_names))  {
+    #for (a in 15)  {
+    
+    #isolate the pair of interest
+    sp_name_holder <- unlist(strsplit(gsub("NET_","",NET_names[a]),split = "_vs_"))
+    print(sp_name_holder)
+    
+    results_holder <- pvalues.nst[pvalues.nst[,1]==NET_names[a],]
+    print(results_holder)
+    
+    #D metric
+    if(results_holder$Dpvalue <= 0.025)	{   #ENMs are less similar than the null
+      NET_sig[(rownames(NET_sig)==sp_name_holder[2]), (colnames(NET_sig)==sp_name_holder[1])] <- 1
+    }
+    else if(results_holder$Dpvalue >= 0.025 & results_holder$Dpvalue <= 0.975)	{
+      NET_sig[(rownames(NET_sig)==sp_name_holder[2]), (colnames(NET_sig)==sp_name_holder[1])] <- 0
+    }
+    
+    #I metric
+    if(results_holder$Ipvalue <= 0.025){
+      NET_sig[(rownames(NET_sig)==sp_name_holder[1]), (colnames(NET_sig)==sp_name_holder[2])] <- 1
+    }
+    else if(results_holder$Ipvalue >= 0.025 & results_holder$Ipvalue <= 0.975)	{
+     NET_sig[(rownames(NET_sig)==sp_name_holder[1]), (colnames(NET_sig)==sp_name_holder[2])] <- 0
+    }
+  }
+
+#NIT   
 gsub("_vs_","_", pvalues.nst[,1])
 
 NET.files <- list.files("/Volumes/Nicholas_Huron_Backup/NIT", pattern=".rda$", full.names = T)

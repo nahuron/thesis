@@ -30,7 +30,7 @@ NET.names <- list.files("/Volumes/Nicholas_Huron_Backup/NIT", pattern=".rda$", f
 
 #obtain the appropriate niolap file and split it
 
-emp.overlaps <- read.table("/Users/nicholashuron/Desktop/niche_overlap_tests/communities/revised.niche.overlaps.csv",row.names=1,sep=",", header=T)
+emp.overlaps <- read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/revised.niche.overlaps.all.csv",row.names=1,sep=",", header=T)
 
 #emp.overlaps.d <- emp.overlaps[upper.tri(emp.overlaps, diag=FALSE)]
 #emp.overlaps.i <- emp.overlaps[lower.tri(emp.overlaps, diag=FALSE)]
