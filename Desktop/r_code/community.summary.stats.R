@@ -435,9 +435,13 @@ mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".c
 mydata.filepathshort[-grep("phylo_fr", mydata.filepathshort)] -> mydata.filepathshort
 mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
 
+#Tails
+load(file="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/results.tails.rda")
+
 #objects to store results
 results.gen <- list()
 length(results.gen) <- as.numeric(length(mydata.filepathshort))
+names(results.gen) <- seq(from=0.05,to=1.00,by=0.05)
 
 #loop to read in all grid size objects to a list
 for (a in 1: length(mydata.filepathshort)){
@@ -455,20 +459,50 @@ for (b in 1:length(results.gen)){
   results.gen[[b]] <- results.gen[[b]][-as.numeric(nrow(results.gen[[b]])),]
 }
 
-plot(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mpd, pch=16, col="blue",  ylim=c(-4,4), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
+plot(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mpd, pch=16, col=rgb(0,114/255,178/255,1),  ylim=c(-6,6), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
 for(c in 1:length(results.gen)){
-  boxplot(results.gen[[c]]$ses.mpd, border="blue", boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
-}
-points(rep(0.05,34), results.gen[[1]]$ses.mpd)
+  boxplot(results.gen[[c]]$ses.mpd, border=rgb(0,114/255,178/255,1), boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
+  
+  points(x=rep(as.numeric(names(results.gen)[c]), times=length(results.gen[[c]]$ses.mpd[results.gen[[c]]$ses.mpd.p >= 0.975 | results.gen[[c]]$ses.mpd.p <= 0.025])),
+       y=results.gen[[c]]$ses.mpd[results.gen[[c]]$ses.mpd.p >= 0.975 | results.gen[[c]]$ses.mpd.p <= 0.025],
+       col=rgb(0,114/255,178/255,1),
+       pch=18, cex=1.75)
 
-points(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mntd, pch=16, col="red",  ylim=c(-4,4), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
-for(c in 1:length(results.gen)){
-  boxplot(results.gen[[c]]$ses.mntd, border="red", boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
+  #abline(h=results.tails$ses.mpd.lower[c], col="blue", lty=2)
+  #abline(h=results.tails$ses.mpd.upper[c], col="blue", lty=2)
 }
 
-plot(seq(from=0.05,to=1.00,by=0.05), results.gen.means$psv, pch=16, col="black",  ylim=c(0,1), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="PSV")
+points(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mntd, pch=16, col=rgb(213/255,94/255,0,1),  ylim=c(-6,6), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
 for(c in 1:length(results.gen)){
-  boxplot(results.gen[[c]]$psv, border="black", boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
+  boxplot(results.gen[[c]]$ses.mntd, border=rgb(213/255,94/255,0,1), boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
+  
+    points(x=rep(as.numeric(names(results.gen)[c]), times=length(results.gen[[c]]$ses.mntd[results.gen[[c]]$ses.mntd.p >= 0.975 | results.gen[[c]]$ses.mntd.p <= 0.025])),
+       y=results.gen[[c]]$ses.mntd[results.gen[[c]]$ses.mntd.p >= 0.975 | results.gen[[c]]$ses.mntd.p <= 0.025],
+       col=rgb(213/255,94/255,0,1),
+       pch=18, cex=1.75)
+  
+  #abline(h=results.tails$ses.mntd.lower[c], col="red", lty=2)
+  #abline(h=results.tails$ses.mntd.upper[c], col="red", lty=2)
+}
+
+abline(h=0, lty=2)
+points(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mntd, pch=16, col=rgb(213/255,94/255,0,1),  ylim=c(-5,5), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
+points(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mpd, pch=16, col=rgb(0,114/255,178/255,1),  ylim=c(-5,5), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
+legend(x=0.8, y=4.75, legend=c("SES.MPD", "SES.MNTD"), col="black", fill=c(rgb(0,114/255,178/255,1), rgb(213/255,94/255,0,1)), bty="n")
+
+
+plot(seq(from=0.05,to=1.00,by=0.05), results.gen.means$psv, pch=16, col=rgb(0,158/255,115/255,1),  ylim=c(0,1.05), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="PSV")
+for(c in 1:length(results.gen)){
+  boxplot(results.gen[[c]]$psv, border=rgb(0,158/255,115/255,1), boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
+  abline(h=0.854, lty=2)
+  
+  points(x=rep(as.numeric(names(results.gen)[c]), times=length(results.gen[[c]]$psv[results.gen[[c]]$psv.p >= 0.975 | results.gen[[c]]$psv.p <= 0.025])),
+       y=results.gen[[c]]$psv[results.gen[[c]]$psv.p >= 0.975 | results.gen[[c]]$psv.p <= 0.025],
+       col=rgb(0,158/255,115/255,1),
+       pch=18, cex=1.75)
+  
+  #abline(h=results.tails$psv.lower[c], col="black", lty=2)
+  #abline(h=results.tails$psv.upper[c], col="black", lty=2)
 }
 
 

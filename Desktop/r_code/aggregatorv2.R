@@ -24,7 +24,6 @@ setwd("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Dat
 
 
 mypal_viridis <- viridis(20,1,0,1,"D")
- <- viridis(20,1,0,1,"D")
   
 #obtain file paths
 mydata.filepath <- list.files(path=getwd(), pattern = "\\.csv$", full.names = TRUE)
@@ -33,12 +32,10 @@ mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".c
 #morphological
 mydata.filepathshort[-grep("morph_fr", mydata.filepathshort)] -> mydata.filepathshort
 mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
-
 #luzon only
 #morphological
 mydata.filepathshort[-grep("morph_fr_M", mydata.filepathshort)] -> mydata.filepathshort
 mydata.filepath[-grep("morph_fr_M.csv", mydata.filepath)] -> mydata.filepath
-
 #mindanao only
 #morphological
 mydata.filepathshort[-grep("morph_fr_L", mydata.filepathshort)] -> mydata.filepathshort

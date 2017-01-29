@@ -23,7 +23,8 @@ ses.mpd2 <- function (samp, dis, subsetted=colnames(dis), null.model = c("taxa.l
     #SES the 1000 means of the same number of null communities
     mpd.rand.z <- (rowMeans(mpd.rand) - mean(rowMeans(mpd.rand))) / sd(rowMeans(mpd.rand))
     #SES the mean across all empirical communities
-    mean.mpd.obs.z <- (mean.mpd.obs - mean(rowMeans(mpd.rand))) / sd(rowMeans(mpd.rand))
+    #mean.mpd.obs.z <- (mean.mpd.obs - mean(rowMeans(mpd.rand))) / sd(rowMeans(mpd.rand))
+    mean.mpd.obs.z <- mean(mpd.obs.z)
     
     return(list(null.means=rowMeans(mpd.rand), mean.mpd.obs= mean.mpd.obs, quantiles.null = quantiles.null, results.by.com = {data.frame(ntaxa = specnumber(samp), mpd.obs, mpd.rand.mean, mpd.rand.sd, mpd.obs.rank, mpd.obs.z, mpd.obs.p = mpd.obs.rank/(runs + 1), runs = runs, row.names = row.names(samp))}, mean.mpd.obs.z = mean.mpd.obs.z, mpd.rand.z = mpd.rand.z, mpd.rand=mpd.rand))
 }
@@ -54,7 +55,8 @@ ses.mntd2 <- function (samp, dis, subsetted=colnames(dis), null.model = c("taxa.
     #SES the 1000 means of the same number of null communities
     mntd.rand.z <- (rowMeans(mntd.rand) - mean(rowMeans(mntd.rand))) / sd(rowMeans(mntd.rand))
     #SES the mean across all empirical communities
-    mean.mntd.obs.z <- (mean.mntd.obs - mean(rowMeans(mntd.rand))) / sd(rowMeans(mntd.rand))
+    #mean.mntd.obs.z <- (mean.mntd.obs - mean(rowMeans(mntd.rand))) / sd(rowMeans(mntd.rand))
+    mean.mntd.obs.z <- mean(mntd.obs.z)
     
     return(list(null.means=rowMeans(mntd.rand), mean.mntd.obs= mean.mntd.obs, quantiles.null = quantiles.null, results.by.com = {data.frame(ntaxa = specnumber(samp), mntd.obs, mntd.rand.mean, mntd.rand.sd, mntd.obs.rank, mntd.obs.z, mntd.obs.p = mntd.obs.rank/(runs + 1), runs = runs, row.names = row.names(samp))}, mean.mntd.obs.z = mean.mntd.obs.z, mntd.rand.z = mntd.rand.z, mntd.rand=mntd.rand))
 }

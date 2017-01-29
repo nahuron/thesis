@@ -112,9 +112,9 @@ for (a in 1:length(community.files))	{
 	results.list[[a]]$n.coms[1+nrow(emp.comm)] <- mean(rowSums(emp.comm))
 	
 	#ses.mpd.p for ses.mpd mean
-	results.list[[a]]$ses.mpd.p[1+nrow(emp.comm)] <- 1 - mean(ses.mpd.hold$mpd.rand.z > ses.mpd.hold$mean.mpd.obs.z)
+	results.list[[a]]$ses.mpd.p[1+nrow(emp.comm)] <- 1 - mean(ses.mpd.hold$null.means > ses.mpd.hold$mean.mpd.obs)
 	#ses.mntd.p for ses.mntd mean
-	results.list[[a]]$ses.mntd.p[1+nrow(emp.comm)] <- 1 - mean(ses.mntd.hold$mntd.rand.z > ses.mntd.hold$mean.mntd.obs.z)
+	results.list[[a]]$ses.mntd.p[1+nrow(emp.comm)] <- 1 - mean(ses.mntd.hold$null.means > ses.mntd.hold$mean.mntd.obs)
 	#psv.p for psv mean
 	results.list[[a]]$psv.p[1+nrow(emp.comm)] <- 1-mean(psv.hold$null.means > psv.hold$mean.obs)
 	
@@ -130,7 +130,7 @@ for (a in 1:length(community.files))	{
 	results.tails$psv.lower[a] <- sort(psv.hold$null.means)[25]
 	results.tails$psv.upper[a] <- sort(psv.hold$null.means)[975]
 	
-	rm(list=c("emp.comm", "ses.mpd.hold", "ses.mntd.hold", "psv.hold", "psv.bycom.hold", "psv.pvalues.hold"))
+	#rm(list=c("emp.comm", "ses.mpd.hold", "ses.mntd.hold", "psv.hold", "psv.bycom.hold", "psv.pvalues.hold"))
 										}
 
 #save the results.tails object for review in figures
