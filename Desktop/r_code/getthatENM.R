@@ -30,4 +30,4 @@ getthatENM <- function(com.matrix, sig.matrix){
   
 }
 
-getthatENM(emp.comm,BST_sig_d)
+getthatENM(emp.comm,NET_sig)
