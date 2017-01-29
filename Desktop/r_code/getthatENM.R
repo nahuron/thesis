@@ -31,3 +31,18 @@ getthatENM <- function(com.matrix, sig.matrix){
 }
 
 getthatENM(emp.comm,NET_sig)
+
+
+#read in community options
+community.files <- list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", full.names=T)
+community.files <- community.files[-grep("_fr.csv", community.files)]
+community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", pattern="\\.csv$", full.names=F))
+community.files.short <- community.files.short[-grep("_fr", community.files.short)]
+
+for(n in 1: length(community.files.short)){
+  emp.comm <- read.csv(paste0(community.files[n]), header=T, row.names=1)
+  #remove species not in ENMs
+  emp.comm <- emp.comm[,!colnames(emp.comm) %in% c("c.f._bonitae", "species2","species3")]
+  
+  getthatENM(emp.comm, NET_sig)
+}
