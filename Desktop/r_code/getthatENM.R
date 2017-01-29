@@ -44,5 +44,7 @@ for(n in 1: length(community.files.short)){
   #remove species not in ENMs
   emp.comm <- emp.comm[,!colnames(emp.comm) %in% c("c.f._bonitae", "species2","species3")]
   
-  getthatENM(emp.comm, NET_sig)
+  print(community.files.short[n])
+  print(getthatENM(emp.comm, NET_sig))
+  rm(emp.comm)
 }
