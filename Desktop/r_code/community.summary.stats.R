@@ -92,7 +92,7 @@ plot(seq(from=0.05,to=1.00,by=0.05), mycoms.meanrichness, pch=16, col="blue",  y
 bplot(simcoms.meanrichness, pos=seq(from=0.05,to=1.00,by=0.05), add=TRUE, axes=FALSE)
 
 #plot number of communities per grid size
-plot(seq(from=0.05,to=1.00,by=0.05), mycoms.ncoms, pch=16, col="red", xlim=c(0,1.05), ylim=c(30,40), ylab="Number of Communities", xlab="Grid Size (Decimal Degrees)", main="Number of Unique Communities per\nCommunity Membership Grid Size")
+plot(seq(from=0.05,to=1.00,by=0.05), mycoms.ncoms, pch=16, col="black", xlim=c(0,1.05), ylim=c(30,40), ylab="Number of Communities", xlab="Grid Size (Decimal Degrees)", main="Number of Unique Communities per\nCommunity Membership Grid Size")
 
 #plot total number of species per grid size
 plot(seq(from=0.05,to=1.00,by=0.05), comlister.num, pch=16, col="blue", xlab="Grid Size (Decimal Degrees)", ylab="Total Number of Species", xlim=c(0,1.05), ylim=c(30,40), main="Number of Unique Species per\nCommunity Membership Grid Size")
@@ -376,6 +376,10 @@ for (e in 1:length(mydata.filepathshort)){
 
 lengths(results.psv); lengths(results.mpd); lengths(results.mntd)
 
+hist(lengths(results.psv),xlim=c(0,35))
+hist(lengths(results.mpd), col="red", add=T)
+hist(lengths(results.mntd), col="blue", add=T)
+
 #obtain the means for each metric and grid size
 mydata.all <- rep(NA, 7)
 mydata.sesmpd <- rep(NA, 20)
@@ -416,7 +420,69 @@ ses.mpd.coms.co <- cor.test(x=mycoms.meanrichness, y=mydata.all$ses.mpd, method 
 ses.mntd.coms.co <- cor.test(x=mycoms.meanrichness, y=mydata.all$ses.mntd, method = "pearson")
 
 
+#####MORPHOLOGY VERSION
+morph.short <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL", pattern="[fr.csv]*$")
+morph.long <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL", pattern="[fr.csv]*$", full.names = TRUE)
 
+results.d2 <- list()
+length(results.d2) <- length(morph.long)
+
+morph.short[--grep("_fr.csv", morph.short)] -> morph.short
+
+morph.long[-grep("_fr.csv", morph.long)] -> morph.long
+
+
+for (e in 1:length(mydata.filepathshort)){
+  mydata <- read.csv(morph.long[e], header=T, row.names=1)
+  names(results.d2)[e] <- paste0("D2_",mydata.filepathshort[e])
+  
+  if(colnames(mydata)[as.numeric(ncol(mydata))]=="com.fr"){
+    mydata.red <- mydata[,!(names(mydata) %in% c("com.fr", "n.coms"))]
+    mydata.red <- mydata.red[-as.numeric(nrow(mydata.red)),]
+  }
+  else{
+    mydata.red <- mydata[-as.numeric(nrow(mydata)),]
+  }
+  
+  mydata.sig <- mydata.red[mydata.red$emp.com.mean.pvalues>=0.975 | mydata.red$emp.com.mean.pvalues<=0.025,]
+  mydata.rm <- c("emp.com.mean.holder", "emp.com.mean.pvalues")
+  mydata.sig <- mydata.sig[,!(names(mydata.sig) %in% mydata.rm)]
+  mydata.sig <- mydata.sig[,colSums(mydata.sig) !=0]
+  mydata.sig <- unique(mydata.sig)
+  
+  if(nrow(mydata.sig)>0){
+    com.fr <- rep(NA, times=nrow(mydata.sig))
+    for (a in 1:(nrow(mydata.sig))) { #isolate row of interest
+      com.match.hold <- 0
+      for (b in 1:(ncol(mydata.sig))) { #isolate cell within row of interest
+        if (mydata.sig[a,b]==1){
+          m <- match(as.character(colnames(mydata.sig[a,][b])), as.character(brach_fr_key[,1]))
+          com.match.hold <- c(com.match.hold, as.character(brach_fr_key$FR.code[m]))
+          com.match.hold <- com.match.hold[com.match.hold!=0]
+          com.match.hold <- com.match.hold[!is.na(com.match.hold)]
+          com.match.hold <- unique(com.match.hold)
+          print(com.match.hold)
+        }
+      }
+      com.match.hold <- unique(com.match.hold)
+      #print(com.match.hold)
+      if (length(com.match.hold) > 1 ) {
+        #print(paste0("Community ", rownames(mydata.sig)[a], " spans more than 1 Faunal Regions!"))
+        #print(com.match.hold)
+        com.fr[a] <- as.character(length(com.match.hold))
+      }
+      else if (length(com.match.hold == 1)) {
+        com.fr[a] <- as.character(brach_fr_key$FR.code[m])
+      }
+      
+      mydata.revised <- cbind(mydata.sig,mydata.red[rownames(mydata.red) %in% rownames(mydata.sig),c("emp.com.mean.holder",  "emp.com.mean.pvalues")], com.fr)
+      
+      rm(com.match.hold)
+    }
+    print(mydata.revised)
+    results.d2 [[e]] <- mydata.revised
+  }
+}
 
 
 #################################################################################################################
@@ -525,6 +591,8 @@ results.morphd <- list()
 length(results.morphd) <- as.numeric(length(mydata.filepathshort))
 names(results.morphd) <- seq(from=0.05,to=1.00,by=0.05)
 
+
+
 #loop to read in all grid size objects to a list
 for (a in 1: length(mydata.filepathshort)){
   mydata <- read.csv(mydata.filepath[a], header=T, row.names=1)
@@ -552,6 +620,10 @@ for(c in 1:length(results.gen)){
 abline(h=4,lty=2)
 }
 
+#plot grid size and mean morphological disparity
+plot(seq(from=0.05,to=1.00,by=0.05), results.morphd.means$emp.com.mean.holder, pch=16, col="black", xlab="Grid Size (Decimal Degrees)", xlim=c(0,1.05), ylim=c(3,5), main="Mean Morphological Disparityper\nCommunity Membership Grid Size")
+
+cor.test(x=seq(from=0.05,to=1.00,by=0.05), y=results.morphd.means$emp.com.mean.holder, method = "pearson")
 
 ####ENM DATA####
 setwd("/Users/nicholashuron/Desktop/niche_overlap_tests/test2")
@@ -640,23 +712,3 @@ for (f in 1:length(mydata.filepath)){
 }
 
 
-
-##genetic data
-setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic")
-
-mydata.filepath <- list.files(path=getwd(), pattern = "\\_fr.csv$", full.names = TRUE)
-mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = "_fr.csv$", full.names = FALSE))
-
-metrics <- as.data.frame(matrix(ncol=3, nrow=length(mydata.filepathshort)))
-
-
-for (e in 1:length(mydata.filepathshort)){
-  
-  mydata <- read.csv(mydata.filepath[e], header=T, row.names=1)
-  print(mydata[nrow(mydata),])
-  cols <- c("psv.p", "ses.mpd.p","ses.mntd.p")
-  colnames(metrics) <- cols
-  print(mydata[nrow(mydata),cols])
-  metrics[e,] <- mydata[nrow(mydata),cols]
-  
-}
