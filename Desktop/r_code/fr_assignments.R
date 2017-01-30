@@ -37,32 +37,64 @@ for (c in 1:length(mydata.filepath))  {
   com.fr <- rep(NA, times=nrow(mydata))
   
 #Iterate Matching and coding in com.fr object
-for (a in 1:(nrow(mydata)-1)) { #isolate row of interest
-    com.match.hold <- 0
-  for (b in which(apply(X=mydata, MARGIN=2, FUN=function(x) all(x[!is.na(x)==TRUE]%%1==0)), useNames = FALSE)) { #isolate cell within row of interest
-  if (mydata[a,b]==1){
-    m <- match(as.character(colnames(mydata[a,][b])), as.character(brach_fr_key[,1]))
-    com.match.hold <- c(com.match.hold, as.character(brach_fr_key$FR.code[m]))
-    com.match.hold <- com.match.hold[com.match.hold!=0]
-    com.match.hold <- com.match.hold[!is.na(com.match.hold)]
-    print(com.match.hold)
-  }
-  }
-  com.match.hold <- unique(com.match.hold)
-  print(com.match.hold)
-  if (length(com.match.hold) > 1 ) {
-    print(paste0("Community ", rownames(mydata)[a], " spans more than 1 Faunal Regions!"))
-    print(com.match.hold)
-    com.fr[a] <- as.character(length(com.match.hold))
+  if(any(is.na(mydata[nrow(mydata),]))){
+    for (a in 1:(nrow(mydata)-1)) { #isolate row of interest
+      com.match.hold <- 0
+      for (b in which(apply(X=mydata, MARGIN=2, FUN=function(x) all(x[!is.na(x)==TRUE]%%1==0)), useNames = FALSE)) { #isolate cell within row of interest
+        if (mydata[a,b]==1){
+          m <- match(as.character(colnames(mydata[a,][b])), as.character(brach_fr_key[,1]))
+          com.match.hold <- c(com.match.hold, as.character(brach_fr_key$FR.code[m]))
+          com.match.hold <- com.match.hold[com.match.hold!=0]
+          com.match.hold <- com.match.hold[!is.na(com.match.hold)]
+          print(com.match.hold)
+        }
+      }
+      com.match.hold <- unique(com.match.hold)
+      print(com.match.hold)
+      if (length(com.match.hold) > 1 ) {
+        print(paste0("Community ", rownames(mydata)[a], " spans more than 1 Faunal Regions!"))
+        print(com.match.hold)
+        com.fr[a] <- as.character(length(com.match.hold))
+      }
+      else if (length(com.match.hold == 1)) {com.fr[a] <- as.character(brach_fr_key$FR.code[m])}
+      
+      mydata.revised <- cbind(mydata, com.fr)
+      
+      print(mydata)
+      
+      rm(com.match.hold)
     }
-  else if (length(com.match.hold == 1)) {com.fr[a] <- as.character(brach_fr_key$FR.code[m])}
-  
-  mydata.revised <- cbind(mydata, com.fr)
-  
-  print(mydata)
-  
-  rm(com.match.hold)
-}
+    
+  }
+  else{
+    for (a in 1:(nrow(mydata))) { #isolate row of interest
+      com.match.hold <- 0
+      for (b in which(apply(X=mydata, MARGIN=2, FUN=function(x) all(x[!is.na(x)==TRUE]%%1==0)), useNames = FALSE)) { #isolate cell within row of interest
+        if (mydata[a,b]==1){
+          m <- match(as.character(colnames(mydata[a,][b])), as.character(brach_fr_key[,1]))
+          com.match.hold <- c(com.match.hold, as.character(brach_fr_key$FR.code[m]))
+          com.match.hold <- com.match.hold[com.match.hold!=0]
+          com.match.hold <- com.match.hold[!is.na(com.match.hold)]
+          print(com.match.hold)
+        }
+      }
+      com.match.hold <- unique(com.match.hold)
+      print(com.match.hold)
+      if (length(com.match.hold) > 1 ) {
+        print(paste0("Community ", rownames(mydata)[a], " spans more than 1 Faunal Regions!"))
+        print(com.match.hold)
+        com.fr[a] <- as.character(length(com.match.hold))
+      }
+      else if (length(com.match.hold == 1)) {com.fr[a] <- as.character(brach_fr_key$FR.code[m])}
+      
+      mydata.revised <- cbind(mydata, com.fr)
+      
+      print(mydata)
+      
+      rm(com.match.hold)
+    }
+    
+  }
   
   #write data results
   write.csv(mydata.revised, paste0(getwd(),"/", mydata.filepathshort[c], "_fr.csv"))

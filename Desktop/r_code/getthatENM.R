@@ -15,6 +15,11 @@ getthatENM <- function(com.matrix, sig.matrix){
   length(coms.list) <- nrow(com.matrix)
   names(coms.list) <- rownames(com.matrix)
   
+  #function to add PAIC names or identifiers to list element names
+  if(grep("com.fr", colnames(com.matrix)) > 0){
+    names(coms.list) <- paste0(rownames(com.matrix), "_", com.matrix$com.fr)
+  }
+  
   #loop to obtain the species names
   for (a in 1: length(species.list)){
     species.list[[a]] <- colnames(com.matrix[a,which(com.matrix[a,]==1)])
@@ -35,16 +40,28 @@ getthatENM(emp.comm,NET_sig)
 
 #read in community options
 community.files <- list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", full.names=T)
-community.files <- community.files[-grep("_fr.csv", community.files)]
+community.files <- community.files[grep("_fr.csv", community.files)]
 community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", pattern="\\.csv$", full.names=F))
-community.files.short <- community.files.short[-grep("_fr", community.files.short)]
+community.files.short <- community.files.short[grep("_fr", community.files.short)]
+
+results.net <- list()
+length(results.net) <- length(community.files.short)
+names(results.net) <- community.files.short
 
 for(n in 1: length(community.files.short)){
   emp.comm <- read.csv(paste0(community.files[n]), header=T, row.names=1)
   #remove species not in ENMs
   emp.comm <- emp.comm[,!colnames(emp.comm) %in% c("c.f._bonitae", "species2","species3")]
   
+  results.net[[n]] <- getthatENM(emp.comm, NET_sig)
+  
   print(community.files.short[n])
   print(getthatENM(emp.comm, NET_sig))
   rm(emp.comm)
 }
+
+
+#dummy lines for analyzing
+lapply(results.net$revised_com_0.05, function(x) x[upper.tri(x)]<-NA)
+lapply(results.net$revised_com_0.05, function(x) x[lower.tri(x)])
+lapply(results.net$revised_com_0.05, function(x) sum(x[lower.tri(x)]))
