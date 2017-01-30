@@ -419,7 +419,7 @@ ses.mntd.coms.co <- cor.test(x=mycoms.meanrichness, y=mydata.all$ses.mntd, metho
 
 
 
-
+#################################################################################################################
 library(viridis)
 
 mypal_viridis <- viridis(20,1,0,1,"D")
@@ -506,11 +506,51 @@ for(c in 1:length(results.gen)){
 }
 
 
+#################################################################################################################
+library(viridis)
 
+mypal_viridis <- viridis(20,1,0,1,"D")
+mypal_viridis_t <- viridis(20,0.5,0,1,"D")
 
+setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL/")
 
+mydata.filepath.short <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL", pattern="[fr.csv]*$")
+mydata.filepath <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL", pattern="[fr.csv]*$", full.names = TRUE)
 
+mydata.filepath.short[-grep("_fr.csv", mydata.filepath.short)] -> mydata.filepath.short
+mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
 
+#objects to store results
+results.morphd <- list()
+length(results.morphd) <- as.numeric(length(mydata.filepathshort))
+names(results.morphd) <- seq(from=0.05,to=1.00,by=0.05)
+
+#loop to read in all grid size objects to a list
+for (a in 1: length(mydata.filepathshort)){
+  mydata <- read.csv(mydata.filepath[a], header=T, row.names=1)
+  results.morphd [[a]] <- mydata[colnames(mydata) %in% c("emp.com.mean.holder",	"emp.com.mean.pvalues")]
+  
+}
+
+results.morphd.means <- as.data.frame(matrix(nrow=length(results.morphd),ncol=length(c("emp.com.mean.holder",	"emp.com.mean.pvalues"))))
+colnames(results.morphd.means) <- c("emp.com.mean.holder",	"emp.com.mean.pvalues")
+#loop to get the means out of all objects in results.morphd
+for (b in 1:length(results.morphd)){
+  results.morphd.means[b,] <- results.morphd[[b]][as.numeric(nrow(results.morphd[[b]])),]
+  print(results.morphd[[b]])
+  results.morphd[[b]] <- results.morphd[[b]][-as.numeric(nrow(results.morphd[[b]])),]
+}
+
+plot(seq(from=0.05,to=1.00,by=0.05), results.morphd.means$emp.com.mean.holder, pch=16, col=rgb(0,0,0,1),  ylim=c(-0.1,15), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Mahalanobis D^2 Distance")
+for(c in 1:length(results.gen)){
+  boxplot(results.morphd[[c]]$emp.com.mean.holder, border=rgb(0,0,0,1), boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
+  
+  points(x=rep(as.numeric(names(results.morphd)[c]), times=length(results.morphd[[c]]$emp.com.mean.holder[results.morphd[[c]]$emp.com.mean.pvalues >= 0.975 | results.morphd[[c]]$emp.com.mean.pvalues <= 0.025])),
+       y=results.morphd[[c]]$emp.com.mean.holder[results.morphd[[c]]$emp.com.mean.pvalues >= 0.975 | results.morphd[[c]]$emp.com.mean.pvalues <= 0.025],
+       col=rgb(0,0,0,1),
+       pch=18, cex=1.75)
+abline(h=4,lty=2)
+}
 
 
 ####ENM DATA####
