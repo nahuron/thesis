@@ -213,15 +213,15 @@ brach_fr_key <- read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Ni
 
 #PSV
 for (e in 1:length(mydata.filepathshort)){
-  mydata <- read.csv(mydata.filepath[e], header=T, row.names=1)
+  mydata.hold <- read.csv(mydata.filepath[e], header=T, row.names=1)
   names(results.psv)[e] <- paste0("PSV_",mydata.filepathshort[e])
   
-  if(colnames(mydata)[as.numeric(ncol(mydata))]=="com.fr"){
-    mydata.red <- mydata[,!(names(mydata) %in% c("com.fr", "n.coms"))]
+  if(colnames(mydata.hold)[as.numeric(ncol(mydata.hold))]=="com.fr"){
+    mydata.red <- mydata.hold[,!(names(mydata.hold) %in% c("com.fr", "n.coms"))]
     mydata.red <- mydata.red[-as.numeric(nrow(mydata.red)),]
   }
   else{
-    mydata.red <- mydata[-as.numeric(nrow(mydata)),]
+    mydata.red <- mydata.hold[-as.numeric(nrow(mydata.hold)),]
   }
   
   mydata.sig <- mydata.red[mydata.red$psv.p>=0.975 | mydata.red$psv.p<=0.025,]
@@ -267,15 +267,15 @@ for (e in 1:length(mydata.filepathshort)){
 #MPD
 for (e in 1:length(mydata.filepathshort)){
   
-  mydata <- read.csv(mydata.filepath[e], header=T, row.names=1)
+  mydata.hold <- read.csv(mydata.filepath[e], header=T, row.names=1)
   names(results.mpd)[e] <- paste0("MPD_",mydata.filepathshort[e])
   
-  if(colnames(mydata)[as.numeric(ncol(mydata))]=="com.fr"){
-    mydata.red <- mydata[,!(names(mydata) %in% c("com.fr", "n.coms"))]
+  if(colnames(mydata.hold)[as.numeric(ncol(mydata.hold))]=="com.fr"){
+    mydata.red <- mydata.hold[,!(names(mydata.hold) %in% c("com.fr", "n.coms"))]
     mydata.red <- mydata.red[-as.numeric(nrow(mydata.red)),]
   }
   else{
-    mydata.red <- mydata[-as.numeric(nrow(mydata)),]
+    mydata.red <- mydata.hold[-as.numeric(nrow(mydata.hold)),]
   }
   
   mydata.sig <- mydata.red[mydata.red$ses.mpd.p>=0.975 | mydata.red$ses.mpd.p<=0.025,]
@@ -320,15 +320,15 @@ for (e in 1:length(mydata.filepathshort)){
 #MNTD
 for (e in 1:length(mydata.filepathshort)){
   
-  mydata <- read.csv(mydata.filepath[e], header=T, row.names=1)
+  mydata.hold <- read.csv(mydata.filepath[e], header=T, row.names=1)
   names(results.mntd)[e] <- paste0("MNTD_",mydata.filepathshort[e])
   
-  if(colnames(mydata)[as.numeric(ncol(mydata))]=="com.fr"){
-    mydata.red <- mydata[,!(names(mydata) %in% c("com.fr", "n.coms"))]
+  if(colnames(mydata.hold)[as.numeric(ncol(mydata.hold))]=="com.fr"){
+    mydata.red <- mydata.hold[,!(names(mydata.hold) %in% c("com.fr", "n.coms"))]
     mydata.red <- mydata.red[-as.numeric(nrow(mydata.red)),]
   }
   else{
-    mydata.red <- mydata[-as.numeric(nrow(mydata)),]
+    mydata.red <- mydata.hold[-as.numeric(nrow(mydata.hold)),]
   }
   
   mydata.sig <- mydata.red[mydata.red$ses.mntd.p>=0.975 | mydata.red$ses.mntd.p<=0.025,]
@@ -477,12 +477,50 @@ for (e in 1:length(mydata.filepathshort)){
       
       mydata.revised <- cbind(mydata.sig,mydata.red[rownames(mydata.red) %in% rownames(mydata.sig),c("emp.com.mean.holder",  "emp.com.mean.pvalues")], com.fr)
       
+      
       rm(com.match.hold)
     }
     print(mydata.revised)
     results.d2 [[e]] <- mydata.revised
+    
   }
 }
+
+results.d2 <- results.d2[lengths(results.d2)>0]
+
+#split results by PAIC 
+splitbyPAIC <- function(mydata, splitrule, colofinterest="com.fr"){
+  split.results<- as.list(rep(NA,length(mydata)))
+  length(split.results) <- length(mydata)
+  names(split.results) <- names(mydata)
+  
+  for (f in 1: length(mydata)){
+    ind.com <- mydata[[f]]
+    paic.holder <- which(colnames(ind.com)==colofinterest)
+  
+    com.holder <- ind.com[ind.com[,paic.holder]==splitrule,]
+  
+  if(length(nrow(com.holder) < 1) == 0){
+    split.results[[f]] <- NA
+  }
+    else if(length(nrow(com.holder) > 0) > 0){
+      com.holder <- ind.com[ind.com[,paic.holder]==splitrule,]
+      split.results[[f]] <- com.holder
+    }
+  
+}
+  return(split.results)
+}
+
+splitbyPAIC(results.d2,"M")
+splitbyPAIC(results.mpd,"M")
+splitbyPAIC(results.mntd,"M")
+splitbyPAIC(results.psv,"M")
+
+splitbyPAIC(results.d2,"L")
+splitbyPAIC(results.mpd,"L")
+splitbyPAIC(results.mntd,"L")
+splitbyPAIC(results.psv,"L")
 
 
 #################################################################################################################
@@ -511,8 +549,8 @@ names(results.gen) <- seq(from=0.05,to=1.00,by=0.05)
 
 #loop to read in all grid size objects to a list
 for (a in 1: length(mydata.filepathshort)){
-  mydata <- read.csv(mydata.filepath[a], header=T, row.names=1)
-  results.gen [[a]] <- mydata[colnames(mydata) %in% c("ses.mpd",	"ses.mpd.p",	"ses.mntd",	"ses.mntd.p",	"psv",	"psv.p",	"n.coms")]
+  mydata.hold <- read.csv(mydata.filepath[a], header=T, row.names=1)
+  results.gen [[a]] <- mydata.hold[colnames(mydata.hold) %in% c("ses.mpd",	"ses.mpd.p",	"ses.mntd",	"ses.mntd.p",	"psv",	"psv.p",	"n.coms")]
   
 }
 
@@ -595,8 +633,8 @@ names(results.morphd) <- seq(from=0.05,to=1.00,by=0.05)
 
 #loop to read in all grid size objects to a list
 for (a in 1: length(mydata.filepathshort)){
-  mydata <- read.csv(mydata.filepath[a], header=T, row.names=1)
-  results.morphd [[a]] <- mydata[colnames(mydata) %in% c("emp.com.mean.holder",	"emp.com.mean.pvalues")]
+  mydata.hold <- read.csv(mydata.filepath[a], header=T, row.names=1)
+  results.morphd [[a]] <- mydata.hold[colnames(mydata.hold) %in% c("emp.com.mean.holder",	"emp.com.mean.pvalues")]
   
 }
 
@@ -657,17 +695,17 @@ enms.bio15 <- rep(NA, times=length(folders))
 names(enms.bio15) <- folders.short
 
 for (a in 1:length(folders)){
-  mydata <- read.csv(list.files(folders[a], pattern="maxentResults.csv", full.names = TRUE), header=TRUE, row.names=1)
+  mydata.hold <- read.csv(list.files(folders[a], pattern="maxentResults.csv", full.names = TRUE), header=TRUE, row.names=1)
   print(folders.short[a])
-  print(mydata$Test.AUC)
-  print(mydata$Minimum.training.presence.test.omission)
-  enms.auc[a]<-mydata$Test.AUC[nrow(mydata)]
-  enms.om[a]<-mydata$Minimum.training.presence.test.omission[nrow(mydata)]
-  enms.alt[a]<-mydata$alt.contribution[nrow(mydata)]
-  enms.bio02[a]<-mydata$bio_02.contribution[nrow(mydata)]
-  enms.bio03[a]<-mydata$bio_03.contribution[nrow(mydata)]
-  enms.bio12[a]<-mydata$bio_12.contribution[nrow(mydata)]
-  enms.bio15[a]<-mydata$bio_15.contribution[nrow(mydata)]
+  print(mydata.hold$Test.AUC)
+  print(mydata.hold$Minimum.training.presence.test.omission)
+  enms.auc[a]<-mydata.hold$Test.AUC[nrow(mydata.hold)]
+  enms.om[a]<-mydata.hold$Minimum.training.presence.test.omission[nrow(mydata.hold)]
+  enms.alt[a]<-mydata.hold$alt.contribution[nrow(mydata.hold)]
+  enms.bio02[a]<-mydata.hold$bio_02.contribution[nrow(mydata.hold)]
+  enms.bio03[a]<-mydata.hold$bio_03.contribution[nrow(mydata.hold)]
+  enms.bio12[a]<-mydata.hold$bio_12.contribution[nrow(mydata.hold)]
+  enms.bio15[a]<-mydata.hold$bio_15.contribution[nrow(mydata.hold)]
   
 }
 
@@ -691,22 +729,22 @@ mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
 com.spnum <- rep(NA,20)
 
 for (f in 1:length(mydata.filepath)){
-  mydata <- read.csv(mydata.filepath[f], header=T, row.names=1)
+  mydata.hold <- read.csv(mydata.filepath[f], header=T, row.names=1)
   
-  mydata <- mydata[colnames(mydata)!="species2"]
-  mydata <- mydata[colnames(mydata)!="species3"]
-  mydata <- mydata[colnames(mydata)!="c.f._bonitae"]
+  mydata.hold <- mydata.hold[colnames(mydata.hold)!="species2"]
+  mydata.hold <- mydata.hold[colnames(mydata.hold)!="species3"]
+  mydata.hold <- mydata.hold[colnames(mydata.hold)!="c.f._bonitae"]
   
   sp.com <- NA
-  for (e in 1:nrow(mydata)) {
+  for (e in 1:nrow(mydata.hold)) {
     
-    sp.com <- c(sp.com, colnames(mydata[e,mydata[e,]==1]))
+    sp.com <- c(sp.com, colnames(mydata.hold[e,mydata.hold[e,]==1]))
     #print(sp.com)
   }
   #print(length(unique(sp.com[-is.na(sp.com)])))
-  print(nrow(mydata))
-  #print(rowSums(mydata))
-  #print(mean(rowSums(mydata)))
+  print(nrow(mydata.hold))
+  #print(rowSums(mydata.hold))
+  #print(mean(rowSums(mydata.hold)))
   com.spnum[f] <- length(unique(sp.com[-is.na(sp.com)]))
   sp.com <- NA
 }
