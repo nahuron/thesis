@@ -24,16 +24,13 @@ pvalue.overlap <- function(NET, emp.overlap) {   #emp overlap is a vector of com
 
 #obtain list of possible .rData files to use in comparisons
 
-NET.files <- list.files("/Volumes/Nicholas_Huron_Backup/NIT", pattern=".rda$", full.names = T)
-NET.names <- list.files("/Volumes/Nicholas_Huron_Backup/NIT", pattern=".rda$", full.names = F)
+NET.files <- list.files("/Volumes/NAHURON_THESIS/NET/", pattern=".rda$", full.names = T)
+NET.names <- list.files("/Volumes/NAHURON_THESIS/NET/", pattern=".rda$", full.names = F)
   NET.names <-  gsub("\\.rda$","",NET.names)
 
 #obtain the appropriate niolap file and split it
-
 emp.overlaps <- read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/revised.niche.overlaps.all.csv",row.names=1,sep=",", header=T)
 
-#emp.overlaps.d <- emp.overlaps[upper.tri(emp.overlaps, diag=FALSE)]
-#emp.overlaps.i <- emp.overlaps[lower.tri(emp.overlaps, diag=FALSE)]
 
 #get the species names from NET value
 gsub("NET_","",NET.names)

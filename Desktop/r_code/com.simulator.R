@@ -69,7 +69,7 @@ brach_loc <- brach_loc[brach_loc[,1]!="species2",]
 brach_loc <- brach_loc[brach_loc[,1]!="species3",]
 brach_loc <- brach_loc[brach_loc[,1]!="c.f._bonitae",]
 
-#remove for genetic
+#remove for genetics
 brach_loc <- brach_loc[brach_loc[,1]!="vermis",]
 brach_loc <- brach_loc[brach_loc[,1]!="vindumi",]
 brach_loc <- brach_loc[brach_loc[,1]!="wrighti",]

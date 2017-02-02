@@ -40,7 +40,7 @@ brach_morph <- brach_morph[!colnames(brach_morph) %in% "TL"]
 #store nominal characters elsewhere
 brach_limbs <- brach_morph[colnames(brach_morph) %in% c("Species", "Limbstate", "Fldig", "Hldig")]
 #remove the nominal characters
-brach_morph <- brach_morph[!colnames(brach_morph) %in% c("Limbstate", "Fldig", "Hldig")]
+#brach_morph <- brach_morph[!colnames(brach_morph) %in% c("Limbstate", "Fldig", "Hldig")]
 
 
 #-----------------------------------------------------------------------------------------
@@ -163,11 +163,18 @@ com.morph.disp <- function(empirical, simulated, mahalmatrix){
 
 #-----------------------------------------------------------------------------------------
 #Loop to Run!
-
+#whole archipelago
 emp.com.files <- list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", pattern = "_fr.csv$", full.names = TRUE)
 emp.com.files.short <- gsub("\\.csv$","",list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", pattern = "_fr.csv$", full.names = FALSE))
 
+emp.com.files <- list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3.fr/", pattern = "_fr_L.csv$", full.names = TRUE)
+emp.com.files.short <- gsub("\\.csv$","",list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3.fr/", pattern = "_fr_L.csv$", full.names = FALSE))
+
+emp.com.files <- list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3.fr/", pattern = "_fr_M.csv$", full.names = TRUE)
+emp.com.files.short <- gsub("\\.csv$","",list.files(path = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3.fr/", pattern = "_fr_M.csv$", full.names = FALSE))
+
 for(a in 1:length(emp.com.files)){
+  #for(a in 1){
   #read csv file for emp_com
   emp.comm <- read.csv(file=paste0(emp.com.files[a]), header=T, row.names=1)
   #emp.com.short <- gsub("\\.csv$","",emp.comm)
@@ -192,6 +199,10 @@ for(a in 1:length(emp.com.files)){
   
   #generate null coms
   com.simulator(2,5,999,sort(unique(brach_loc[brach_loc$Species %in% unique(brach_morph$Species),"Species"])), writeCSV=F) -> null.coms
+  #luzon only
+  #com.simulator(2,5,999,sort(unique(brach_loc_l[brach_loc_l$Species %in% unique(brach_morph$Species),"Species"])), writeCSV=F) -> null.coms
+  #mindanao only
+  #com.simulator(2,5,999,sort(unique(brach_loc_m[brach_loc_m$Species %in% unique(brach_morph$Species),"Species"])), writeCSV=F) -> null.coms
   
   #com morph function
   com.morph.holder <- com.morph.disp(emp.comm, null.coms,d2.full$distance)

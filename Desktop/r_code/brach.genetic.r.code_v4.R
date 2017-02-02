@@ -31,8 +31,8 @@ community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuro
 	rownames(results.tails) <- community.files.short
 
 #loop that runs all metrics and populates results object
-for (a in 1:length(community.files))	{
-  #for (a in 1)	{
+#for (a in 1:length(community.files))	{
+  for (a in 1)	{
 	#read in community replicate
   emp.comm <- read.csv(paste0(community.files[a]), header=T, row.names=1)
   emp.comm <- emp.comm[lapply(emp.comm, class)!="factor"]
@@ -49,30 +49,30 @@ for (a in 1:length(community.files))	{
 	results.list[[a]]$n.coms[1:nrow(emp.comm)] <- rowSums(emp.comm)
 	
 	#conduct SES.MPD with modified null
-	if(length(grep("_L", community.files.short[a]))>=1) {
-	  ses.mpd.hold <- ses.mpd2(samp=emp.comm, dis=phydist_brach, subsetted=as.character(brach_fr_key_l$Species), null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-	}
-	else if(length(grep("_M", community.files.short[a]))>=1)  {
-	  ses.mpd.hold <- ses.mpd2(emp.comm, phydist_brach, subsetted=as.character(brach_fr_key_m$Species), null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-	}
-	else{
+##if(length(grep("_L", community.files.short[a]))>=1) {
+#  ses.mpd.hold <- ses.mpd2(samp=emp.comm, dis=phydist_brach, subsetted=as.character(brach_fr_key_l$Species), null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
+#}
+#else if(length(grep("_M", community.files.short[a]))>=1)  {
+#  ses.mpd.hold <- ses.mpd2(emp.comm, phydist_brach, subsetted=as.character(brach_fr_key_m$Species), null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
+#}
+	#else{
 	  ses.mpd.hold <- ses.mpd2(emp.comm, phydist_brach, null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-	}
+#	}
 	
 	#populate output list with SES.MPD and p-value for each community
 	results.list[[a]]$ses.mpd[1:length(ses.mpd.hold$results.by.com$mpd.obs)] <- ses.mpd.hold$results.by.com$mpd.obs.z
 	results.list[[a]]$ses.mpd.p[1:length(ses.mpd.hold$results.by.com$mpd.obs.p)] <- ses.mpd.hold$results.by.com$mpd.obs.p
 	
 	#conduct SES.MNTD with modified null
-	if(length(grep("_L", community.files.short[a]))>=1) {
-	  ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach,subsetted=as.character(brach_fr_key_l$Species), null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-	}
-	else if(length(grep("_M", community.files.short[a]))>=1)  {
-	  ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach,subsetted=as.character(brach_fr_key_m$Species), null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-	}
-	else{
+#if(length(grep("_L", community.files.short[a]))>=1) {
+#  ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach,subsetted=as.character(brach_fr_key_l$Species), null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
+#}
+#else if(length(grep("_M", community.files.short[a]))>=1)  {
+#  ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach,subsetted=as.character(brach_fr_key_m$Species), null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
+#}
+	#else{
 	  ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach, null.model = "other", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-	}
+#	}
 	
 	#populate output list with SES.MNTD and p-value for each community
 	results.list[[a]]$ses.mntd[1:length(ses.mntd.hold$results.by.com$mntd.obs)] <- ses.mntd.hold$results.by.com$mntd.obs.z
@@ -83,15 +83,15 @@ for (a in 1:length(community.files))	{
 	results.list[[a]]$psv[1:length(psv.bycom.hold$PSVs)] <- psv.bycom.hold$PSVs
 	
 	#obtain null distrubtion to compare to empirical PSVs
-	if(length(grep("_L", community.files.short[a]))>=1) {
-	  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_l$Species), metric="psv", null.model="other", runs=1000, alpha= 0.05)
-	}
-	else if(length(grep("_M", community.files.short[a]))>=1)  {
-	  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_m$Species), metric="psv", null.model="other", runs=1000, alpha= 0.05)
-	}
-	else{
+#if(length(grep("_L", community.files.short[a]))>=1) {
+#  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_l$Species), metric="psv", null.model="other", runs=1000, alpha= 0.05)
+#}
+#else if(length(grep("_M", community.files.short[a]))>=1)  {
+#  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_m$Species), metric="psv", null.model="other", runs=1000, alpha= 0.05)
+#}
+	#else{
 	  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, metric="psv", null.model="other", runs=1000, alpha= 0.05)
-	}
+#	}
 	
 	  psv.pvalues.hold <- rep(NA, length(psv.bycom.hold$PSVs))
 	  
@@ -189,30 +189,30 @@ for (a in 1:length(community.files))	{
   print(rowSums(emp.comm))
   
   #conduct SES.MPD with modified null
-  if(length(grep("_L", community.files.short[a]))>=1) {
-    ses.mpd.hold <- ses.mpd2(samp=emp.comm, dis=phydist_brach, subsetted=as.character(brach_fr_key_l$Species), null.model = "richness", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-  }
-  else if(length(grep("_M", community.files.short[a]))>=1)  {
-    ses.mpd.hold <- ses.mpd2(emp.comm, phydist_brach, subsetted=as.character(brach_fr_key_m$Species), null.model = "richness", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-  }
-  else{
+  #if(length(grep("_L", community.files.short[a]))>=1) {
+  #  ses.mpd.hold <- ses.mpd2(samp=emp.comm, dis=phydist_brach, subsetted=as.character(brach_fr_key_l$Species), null.model = "richness", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
+  #}
+  #else if(length(grep("_M", community.files.short[a]))>=1)  {
+  #  ses.mpd.hold <- ses.mpd2(emp.comm, phydist_brach, subsetted=as.character(brach_fr_key_m$Species), null.model = "richness", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
+  #}
+  #else{
     ses.mpd.hold <- ses.mpd2(emp.comm, phydist_brach, null.model = "richness", abundance.weighted = FALSE, runs = 1000)
-  }
+  #}
   
   #populate output list with SES.MPD and p-value for each community
   results.lists[[a]]$ses.mpd[1:length(ses.mpd.hold[[4]]$mpd.obs)] <- ses.mpd.hold[[4]]$mpd.obs.z
   results.lists[[a]]$ses.mpd.p[1:length(ses.mpd.hold[[4]]$mpd.obs.p)] <- ses.mpd.hold[[4]]$mpd.obs.p
   
   #conduct SES.MNTD with modified null
-  if(length(grep("_L", community.files.short[a]))>=1) {
-    ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach,subsetted=as.character(brach_fr_key_l$Species), null.model = "richness", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-  }
-  else if(length(grep("_M", community.files.short[a]))>=1)  {
-    ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach,subsetted=as.character(brach_fr_key_m$Species), null.model = "richness", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
-  }
-  else{
+  #if(length(grep("_L", community.files.short[a]))>=1) {
+  #  ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach,subsetted=as.character(brach_fr_key_l$Species), null.model = "richness", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
+  #}
+  #else if(length(grep("_M", community.files.short[a]))>=1)  {
+  #  ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach,subsetted=as.character(brach_fr_key_m$Species), null.model = "richness", abundance.weighted = FALSE, runs = 1000, comminmax=c(2,5), alpha=0.05)
+  #}
+  #else{
     ses.mntd.hold <- ses.mntd2(emp.comm, phydist_brach, null.model = "richness", abundance.weighted = FALSE, runs = 1000)
-  }
+  #}
   
   #populate output list with SES.MNTD and p-value for each community
   results.lists[[a]]$ses.mntd[1:length(ses.mntd.hold[[4]]$mntd.obs)] <- ses.mntd.hold[[4]]$mntd.obs.z
@@ -223,15 +223,15 @@ for (a in 1:length(community.files))	{
   results.lists[[a]]$psv[1:length(psv.bycom.hold$PSVs)] <- psv.bycom.hold$PSVs
   
   #obtain null distrubtion to compare to empirical PSVs
-  if(length(grep("_L", community.files.short[a]))>=1) {
-    psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_l$Species), metric="psv", null.model="richness", runs=1000, alpha= 0.05)
-  }
-  else if(length(grep("_M", community.files.short[a]))>=1)  {
-    psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_m$Species), metric="psv", null.model="richness", runs=1000, alpha= 0.05)
-  }
-  else{
+  #if(length(grep("_L", community.files.short[a]))>=1) {
+  #  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_l$Species), metric="psv", null.model="richness", runs=1000, alpha= 0.05)
+  #}
+  #else if(length(grep("_M", community.files.short[a]))>=1)  {
+  #  psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, comminmax=c(2,5), env=NULL, sp=as.character(brach_fr_key_m$Species), metric="psv", null.model="richness", runs=1000, alpha= 0.05)
+  #}
+  #else{
     psv.hold <- phylostruct.rev(samp=emp.comm, tree=brach, env=NULL, metric="psv", null.model="richness", runs=1000, alpha= 0.05)
-  }
+  #}
   
   psv.pvalues.hold <- rep(NA, length(psv.bycom.hold$PSVs))
   
