@@ -4,7 +4,7 @@
 #install.packages("devtools")
 library(devtools)
 #install_github("danlwarren/ENMTools")
-#install_github("danlwarren/ENMTools", ref="apply")
+install_github("danlwarren/ENMTools", ref="apply")
 library(ENMTools)
 library(raster)
 
@@ -97,27 +97,27 @@ brach.notlist.index <- setdiff(brach.notlist.index, brach.list.index)
 brach.bothlist.index <- seq(1,40,1)
 
 #set external as writing source
-setwd("/Volumes/Time Machine Backups/NET/")
+setwd("/Volumes/NAHURON_THESIS/NET/")
 
-for (b in brach.notlist.index)	{
+for (b in brach.bothlist.index[33])	{
   
-  for (c in brach.list.index){
+  for (c in brach.bothlist.index[28]){
     if(c>b)	{print("Skip due to later comparison")}
     else if(names(sp.list[b]) == names(sp.list[c]))	{print("Skip due to same species")}
     else	{
       print(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])))
-      #ident.hold <- identity.test(species.1=sp.list[[b]], species.2=sp.list[[c]], env=env, type="mx", nreps=99, cores=1)
-      #ident.list <- as.list(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])))
-      #assign(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])), ident.hold)
-      #save(list=as.character(ident.list[1]), file=paste0("/Volumes/Time Machine Backups/NET/",ident.list[1],".rda"), compress="xz")
+      ident.hold <- identity.test(species.1=sp.list[[b]], species.2=sp.list[[c]], env=env, type="mx", nreps=99, cores=1)
+      ident.list <- as.list(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])))
+      assign(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])), ident.hold)
+      save(list=as.character(ident.list[1]), file=paste0("/Volumes/NAHURON_THESIS/NET/",ident.list[1],".rda"), compress="xz")
       
-      #rm(ident.hold)
-      #rm(list=as.character(ident.list[1]))
-      #gc(verbose=T)
+      rm(ident.hold)
+      rm(list=as.character(ident.list[1]))
+      gc(verbose=T)
     }
   }
 }
-#rm(ident.list)							
+rm(ident.list)							
 
 
 	

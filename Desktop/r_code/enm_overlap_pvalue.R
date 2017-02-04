@@ -127,7 +127,7 @@ lines(sigs)
 
   
 #NST
-  pvalues.nst <- read.csv("pvalues.netrev.csv", header=T)
+  pvalues.nst <- read.csv("/Volumes/NAHURON_THESIS/pvalues.net.revised1.csv", header=T)
   
   NET_names <- sort(pvalues.nst[,1])
   
@@ -152,7 +152,7 @@ lines(sigs)
     if(results_holder$Dpvalue <= 0.025)	{   #ENMs are less similar than the null
       NET_sig[(rownames(NET_sig)==sp_name_holder[2]), (colnames(NET_sig)==sp_name_holder[1])] <- 1
     }
-    else if(results_holder$Dpvalue >= 0.025 & results_holder$Dpvalue <= 0.975)	{
+    else if(results_holder$Dpvalue >= 0.025)	{ #ENMs are equivalent to one another due to high overlap
       NET_sig[(rownames(NET_sig)==sp_name_holder[2]), (colnames(NET_sig)==sp_name_holder[1])] <- 0
     }
     
@@ -160,16 +160,19 @@ lines(sigs)
     if(results_holder$Ipvalue <= 0.025){
       NET_sig[(rownames(NET_sig)==sp_name_holder[1]), (colnames(NET_sig)==sp_name_holder[2])] <- 1
     }
-    else if(results_holder$Ipvalue >= 0.025 & results_holder$Ipvalue <= 0.975)	{
+    else if(results_holder$Ipvalue >= 0.025)	{
      NET_sig[(rownames(NET_sig)==sp_name_holder[1]), (colnames(NET_sig)==sp_name_holder[2])] <- 0
     }
   }
 
+  write.csv(NET_sig, file="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/NET_ID.csv")
+  
+  
 #NIT   
 gsub("_vs_","_", pvalues.nst[,1])
 
-NET.files <- list.files("/Volumes/Nicholas_Huron_Backup/NIT", pattern=".rda$", full.names = T)
-NET.names <- list.files("/Volumes/Nicholas_Huron_Backup/NIT", pattern=".rda$", full.names = F)
+NET.files <- list.files("/Volumes/NAHURON_THESIS/NET", pattern=".rda$", full.names = T)
+NET.names <- list.files("/Volumes/NAHURON_THESIS/NET", pattern=".rda$", full.names = F)
   NET.names <-  gsub("\\.rda$","",NET.names)
   
   #get the species names from NET value
