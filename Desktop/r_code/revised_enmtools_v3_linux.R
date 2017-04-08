@@ -1,6 +1,5 @@
 #REVISED ENMTOOLS Runs for Brachymeles
 
-
 #install.packages("devtools")
 library(devtools)
 #install_github("danlwarren/ENMTools")
@@ -94,27 +93,27 @@ brach.notlist.index <- setdiff(brach.notlist.index, brach.list.index)
 brach.bothlist.index <- seq(1,40,1)
 
 #set external as writing source
-setwd("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/BAST/")
+setwd("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/NIT/")
 
-for (b in brach.notlist.index)	{
+for (b in sp.files2[32])	{
   
-  for (c in brach.list.index){
+  for (c in sp.files2[6]){
     if(c>b)	{print("Skip due to later comparison")}
     else if(names(sp.list[b]) == names(sp.list[c]))	{print("Skip due to same species")}
     else	{
       print(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])))
-      #ident.hold <- identity.test(species.1=sp.list[[b]], species.2=sp.list[[c]], env=env, type="mx", nreps=99, cores=1)
-      #ident.list <- as.list(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])))
-      #assign(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])), ident.hold)
-      #save(list=as.character(ident.list[1]), file=paste0("/Volumes/Time Machine Backups/NET/",ident.list[1],".rda"), compress="xz")
+      ident.hold <- identity.test(species.1=sp.list[[b]], species.2=sp.list[[c]], env=env, type="mx", nreps=99, cores=1)
+      ident.list <- as.list(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])))
+      assign(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])), ident.hold)
+      save(list=as.character(ident.list[1]), file=paste0("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/NIT/",ident.list[1],".rda"), compress="xz")
       
-      #rm(ident.hold)
-      #rm(list=as.character(ident.list[1]))
-      #gc(verbose=T)
+      rm(ident.hold)
+      rm(list=as.character(ident.list[1]))
+      gc(verbose=T)
     }
   }
 }
-#rm(ident.list)							
+rm(ident.list)							
 	
 #bg.asym.list <- as.list(rep(NA, ((length(sp.files2)*(length(sp.files2)+1))/2)))
 
@@ -154,5 +153,24 @@ for (d in 17:1)	{
   }
 }	
 
-
+#Identity test
+for (b in brach.notlist.index[19:24])	{
+  
+  for (c in brach.list.index){
+    if(c>b)	{print("Skip due to later comparison")}
+    else if(names(sp.list[b]) == names(sp.list[c]))	{print("Skip due to same species")}
+    else	{
+      print(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])))
+      ident.hold <- identity.test(species.1=sp.list[[b]], species.2=sp.list[[c]], env=env, type="mx", nreps=99, cores=1)
+      ident.list <- as.list(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])))
+      assign(paste0("NET_",names(sp.list[b]), "_vs_", names(sp.list[c])), ident.hold)
+      save(list=as.character(ident.list[1]), file=paste0(getwd(),"/",ident.list[1],".rda"), compress="xz")
+      
+      rm(ident.hold)
+      rm(list=as.character(ident.list[1]))
+      gc(verbose=T)
+    }
+  }
+}
+rm(ident.list)	
 

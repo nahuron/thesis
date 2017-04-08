@@ -37,6 +37,8 @@ getthatENM <- function(com.matrix, sig.matrix){
 
 getthatENM(emp.comm,NET_sig)
 
+#read in the ENM comparison table
+NET_sig <- read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/NET_ID.csv",header = T, row.names = 1)
 
 #read in community options
 community.files <- list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3", full.names=T)
@@ -62,6 +64,60 @@ for(n in 1: length(community.files.short)){
 
 
 #dummy lines for analyzing
+for(o in 1:length(results.net)){
+  print(lapply(results.net[[o]], function(x) sum(x[lower.tri(x)])))
+}
 lapply(results.net$revised_com_0.05, function(x) x[upper.tri(x)]<-NA)
 lapply(results.net$revised_com_0.05, function(x) x[lower.tri(x)])
-lapply(results.net$revised_com_0.05, function(x) sum(x[lower.tri(x)]))
+lapply(results.net$revised_com_1.00_fr, function(x) sum(x[lower.tri(x)]))
+
+lapply(results.net$revised_com_0.05, function(x) sum(x[upper.tri(x)]))
+
+
+#loop to pull I values for each community at grid size 0.05
+for (b in 1:length(results.net)){
+  print(names(results.net)[b])
+  NETS <- rep(NA,length(results.net[[b]]))
+  for(a in 1: length(results.net[[b]])){
+    #print(results.net[[b]][[a]][lower.tri(results.net[[b]][[a]])])
+    tester <- results.net[[b]][[a]][lower.tri(results.net[[b]][[a]])]
+    #print(paste0(names(results.net)[b],":", a, " is...", (100-(sum(tester[!is.na(tester)])/length(tester[!is.na(tester)])*100)), "% of ENMs similar"))
+    NETS[a] <- (100-(sum(tester[!is.na(tester)])/length(tester[!is.na(tester)])*100))
+    print(mean(NETS[!is.na(NETS)]))
+  }
+  #read in each grid size communities matrix and add as a new row
+  commatrix <- read.csv(community.files[b], header=T, row.names = 1)
+  final.commatrix <- cbind(commatrix[,-ncol(commatrix)], rowSums(commatrix[,-ncol(commatrix)]), NETS, commatrix[,ncol(commatrix)])
+  colnames(final.commatrix)[ncol(final.commatrix)] <- "com.fr"
+  colnames(final.commatrix)[(ncol(final.commatrix)-2)] <- "n.coms"
+  final.commatrix <- rbind(final.commatrix, rep(NA, ncol(final.commatrix)))
+  final.commatrix$n.coms[nrow(final.commatrix)] <- mean(final.commatrix$n.coms[!is.na(final.commatrix$n.coms)])
+  final.commatrix$NETS[nrow(final.commatrix)] <- mean(final.commatrix$NETS[!is.na(final.commatrix$NETS)])
+  
+  write.csv(final.commatrix, file=paste0("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/com.NET/",community.files.short[b],"_net_i.csv"))
+}
+
+
+
+
+
+###NOT USING!!!!!!
+#D values
+for (b in 1:length(results.net)){
+  print(names(results.net)[b])
+  NETS <- rep(NA,length(results.net[[b]]))
+  for(a in 1: length(results.net[[b]])){
+    #print(results.net[[b]][[a]][lower.tri(results.net[[b]][[a]])])
+    tester <- results.net[[b]][[a]][upper.tri(results.net[[b]][[a]])]
+    #print(paste0(names(results.net)[b],":", a, " is...", (100-(sum(tester[!is.na(tester)])/length(tester[!is.na(tester)])*100)), "% of ENMs similar"))
+    NETS[a] <- (100-(sum(tester[!is.na(tester)])/length(tester[!is.na(tester)])*100))
+    print(mean(NETS[!is.na(NETS)]))
+  }
+  #read in each grid size communities matrix and add as a new row
+  commatrix <- read.csv(community.files[b], header=T, row.names = 1)
+  final.commatrix <- cbind(commatrix[,-ncol(commatrix)], rowSums(commatrix[,-ncol(commatrix)]), NETS, commatrix[,ncol(commatrix)])
+  colnames(final.commatrix)[ncol(final.commatrix)] <- "com.fr"
+  colnames(final.commatrix)[(ncol(final.commatrix)-2)] <- "n.coms"
+  write.csv(final.commatrix, file="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/com.NET/com_NET_d.csv")
+}
+

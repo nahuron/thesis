@@ -81,6 +81,7 @@ for(z in 1:20){
   results.morph [[z]] <- mymorph.revised
   results.morphd [[z]] <- mymorph.sig[,-ncol(mymorph.sig)]
   results.morphd [[z]] <- results.morphd[[z]][,-ncol(results.morphd[[z]])]
+  
 }
 
 #################################################################################################################
@@ -91,14 +92,14 @@ morph.long <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huro
 results.d2 <- list()
 length(results.d2) <- length(morph.long)
 
-morph.short[--grep("_fr.csv", morph.short)] -> morph.short
+morph.short[-grep("_fr.csv", morph.short)] -> morph.short
 
 morph.long[-grep("_fr.csv", morph.long)] -> morph.long
 
 
-for (e in 1:length(mydata.filepathshort)){
+for (e in 1:length(morph.long)){
   mydata <- read.csv(morph.long[e], header=T, row.names=1)
-  names(results.d2)[e] <- paste0("D2_",mydata.filepathshort[e])
+  names(results.d2)[e] <- paste0("D2_",morph.short[e])
   
   if(colnames(mydata)[as.numeric(ncol(mydata))]=="com.fr"){
     mydata.red <- mydata[,!(names(mydata) %in% c("com.fr", "n.coms"))]
@@ -152,6 +153,7 @@ for (e in 1:length(mydata.filepathshort)){
 
 results.d2 <- results.d2[lengths(results.d2)>0]
 
+lapply(results.d2, function(x) table(x[,ncol(x)]))
 
 #split results by PAIC 
 splitbyPAIC <- function(mydata, splitrule, colofinterest="com.fr"){
@@ -189,21 +191,25 @@ mypal_viridis_t <- viridis(20,0.5,0,1,"D")
 
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL/")
 
-mydata.filepath.short <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL", pattern="[fr.csv]*$")
-mydata.filepath <- list.files(path="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL", pattern="[fr.csv]*$", full.names = TRUE)
+setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL.l_phl")
+setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL.m_phl")
+
+
+mydata.filepath.short <- list.files(path=getwd(), pattern="[fr.csv]*$")
+mydata.filepath <- list.files(path=getwd(), pattern="[fr.csv]*$", full.names = TRUE)
 
 mydata.filepath.short[-grep("_fr.csv", mydata.filepath.short)] -> mydata.filepath.short
 mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
 
 #objects to store results
 results.morphd <- list()
-length(results.morphd) <- as.numeric(length(mydata.filepathshort))
+length(results.morphd) <- as.numeric(length(mydata.filepath.short))
 names(results.morphd) <- seq(from=0.05,to=1.00,by=0.05)
 
 
 
 #loop to read in all grid size objects to a list
-for (a in 1: length(mydata.filepathshort)){
+for (a in 1: length(mydata.filepath.short)){
   mydata.hold <- read.csv(mydata.filepath[a], header=T, row.names=1)
   results.morphd [[a]] <- mydata.hold[colnames(mydata.hold) %in% c("emp.com.mean.holder",	"emp.com.mean.pvalues")]
   
@@ -218,8 +224,18 @@ for (b in 1:length(results.morphd)){
   results.morphd[[b]] <- results.morphd[[b]][-as.numeric(nrow(results.morphd[[b]])),]
 }
 
+#if results are for a PAIC, assign to new object for plotting
+results.morphd.l <- results.morphd
+results.morphd.means.l <- results.morphd.means
+
+results.morphd.m <- results.morphd
+results.morphd.means.m <- results.morphd.means
+
+
+
+
 plot(seq(from=0.05,to=1.00,by=0.05), results.morphd.means$emp.com.mean.holder, pch=16, col=rgb(0,0,0,1),  ylim=c(-0.1,15), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Mahalanobis D^2 Distance")
-for(c in 1:length(results.gen)){
+for(c in 1:length(results.morphd)){
   boxplot(results.morphd[[c]]$emp.com.mean.holder, border=rgb(0,0,0,1), boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
   
   points(x=rep(as.numeric(names(results.morphd)[c]), times=length(results.morphd[[c]]$emp.com.mean.holder[results.morphd[[c]]$emp.com.mean.pvalues >= 0.975 | results.morphd[[c]]$emp.com.mean.pvalues <= 0.025])),
@@ -228,6 +244,43 @@ for(c in 1:length(results.gen)){
          pch=18, cex=1.75)
   abline(h=4,lty=2)
 }
+
+
+#Luzon vs Mindanao
+plot(seq(from=0.05,to=1.00,by=0.05)-0.01, results.morphd.means.l$emp.com.mean.holder, pch=16, col=rgb(0,0,0,1),  ylim=c(0,15), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Mahalanobis D^2 Distance")
+abline(h=4,lty=2)
+points(seq(from=0.05,to=1.00,by=0.05)+0.01, results.morphd.means.m$emp.com.mean.holder, pch=16, col=rgb(0,0,0,1))
+for(c in 1:length(results.morphd.l)){
+  boxplot(results.morphd.l[[c]]$emp.com.mean.holder, border=rgb(0,0,0,1), lwd=2, boxwex=0.075/2, at=(seq(from=0.05,to=1.00,by=0.05)[c]-0.01), add=TRUE, axes=FALSE, col=rgb(0,114/255,178/255,0.5), outcol=rgb(0,114/255,178/255,1))
+  boxplot(results.morphd.m[[c]]$emp.com.mean.holder, border=rgb(0,0,0,1), lwd=2, boxwex=0.075/2, at=(seq(from=0.05,to=1.00,by=0.05)[c]+0.01), add=TRUE, axes=FALSE, col=rgb(0,158/255,115/255,0.5), outcol=rgb(0,158/255,115/255,1))
+  
+  points(x=rep(as.numeric(names(results.morphd.l)[c])-0.01, times=length(results.morphd.l[[c]]$emp.com.mean.holder[results.morphd.l[[c]]$emp.com.mean.pvalues >= 0.975 | results.morphd.l[[c]]$emp.com.mean.pvalues <= 0.025])),
+         y=results.morphd.l[[c]]$emp.com.mean.holder[results.morphd.l[[c]]$emp.com.mean.pvalues >= 0.975 | results.morphd.l[[c]]$emp.com.mean.pvalues <= 0.025],
+         col=rgb(0,0,0,1),
+         bg=rgb(0,114/255,178/255,1),
+         pch=23, cex=1.5, lwd=2)
+  points(x=rep(as.numeric(names(results.morphd.m)[c])+0.01, times=length(results.morphd.m[[c]]$emp.com.mean.holder[results.morphd.m[[c]]$emp.com.mean.pvalues >= 0.975 | results.morphd.m[[c]]$emp.com.mean.pvalues <= 0.025])),
+         y=results.morphd.m[[c]]$emp.com.mean.holder[results.morphd.m[[c]]$emp.com.mean.pvalues >= 0.975 | results.morphd.m[[c]]$emp.com.mean.pvalues <= 0.025],
+         col=rgb(0,0,0,1),
+         bg=rgb(0,158/255,115/255,1),
+         pch=23, cex=1.5, lwd=2)
+}
+points(seq(from=0.05,to=1.00,by=0.05)-0.01, results.morphd.means.l$emp.com.mean.holder, pch=21, col=rgb(0,0,0,1),bg=rgb(0,114/255,178/255,1))
+points(seq(from=0.05,to=1.00,by=0.05)+0.01, results.morphd.means.m$emp.com.mean.holder, pch=21, col=rgb(0,0,0,1), bg=rgb(0,158/255,115/255,1))
+
+
+legend(x="topleft", 
+       legend=c('Luzon PSV','Mindanao PSV'),
+       col= c(rgb(0,0,0,1), rgb(0,0,0,1)), 
+       pt.bg=c(rgb(0,114/255,178/255,1), rgb(0,158/255,115/255,1)), 
+       pt.lwd = 2,
+       pt.cex = 2,
+       pch=rep(22,4),
+       bty="n", cex=0.75, y.intersp = 0.65)
+
+##############################################################
+
+
 
 #plot grid size and mean morphological disparity
 plot(seq(from=0.05,to=1.00,by=0.05), results.morphd.means$emp.com.mean.holder, pch=16, col="black", xlab="Grid Size (Decimal Degrees)", xlim=c(0,1.05), ylim=c(3,5), main="Mean Morphological Disparityper\nCommunity Membership Grid Size")

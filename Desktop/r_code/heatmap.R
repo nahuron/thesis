@@ -46,4 +46,13 @@ my_palette <- viridis_pal(1, 0,1, "D")
 heatmap.2(as.matrix(overlaps_sigi), col=my_palette, Rowv = F, Colv = F, trace = "none", density.info = "histogram")
 
 
+#read in significance NET_ID
+read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/NET_ID.csv", header=T, row.names = 1) -> overlaps_sigid
+
+rnames <- rownames(overlaps_sigid)
+cnames <- colnames(overlaps_sigid)
+
+my_palette <- viridis_pal(1, 0,1, "D")
+heatmap.2(as.matrix(overlaps_sigid), col=my_palette, Rowv = F, Colv = F, trace = "none", density.info = "histogram")
+
 

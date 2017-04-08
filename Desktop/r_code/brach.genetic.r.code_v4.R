@@ -8,12 +8,12 @@ community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuro
 community.files.short <- community.files.short[-grep("_fr", community.files.short)]
 
 #Luzon only
-community.files <- list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2.fr", pattern="L.csv", full.names=T)
-community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2.fr", pattern="L.csv", full.names=F))
+community.files <- list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3.fr", pattern="L.csv", full.names=T)
+community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3.fr", pattern="L.csv", full.names=F))
 
 #Mindanao only
-community.files <- list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2.fr", pattern="M.csv", full.names=T)
-community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv2.fr", pattern="M.csv", full.names=F))
+community.files <- list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3.fr", pattern="M.csv", full.names=T)
+community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Community/communitiesv3.fr", pattern="M.csv", full.names=F))
 
 ###THESIS METHODS###
 #create results object
@@ -32,7 +32,7 @@ community.files.short <- gsub("\\.csv$","",list.files(path= "/Users/nicholashuro
 
 #loop that runs all metrics and populates results object
 #for (a in 1:length(community.files))	{
-  for (a in 1)	{
+  for (a in 1:length(community.files))	{
 	#read in community replicate
   emp.comm <- read.csv(paste0(community.files[a]), header=T, row.names=1)
   emp.comm <- emp.comm[lapply(emp.comm, class)!="factor"]
@@ -141,7 +141,7 @@ for (c in 1:length(results.list))	{
   emp.comm <- read.csv(paste0(community.files[c]), header=T, row.names=1)
   emp.comm <- emp.comm[lapply(emp.comm, class)!="factor"]
   #remove species without phy data
-  emp.comm <- emp.comm[colnames(emp.comm)!="species2"]; emp.comm <- emp.comm[colnames(emp.comm)!="dalawangdaliri"]; emp.comm <- emp.comm[colnames(emp.comm)!="c.f..bonitae"];emp.comm <- emp.comm[colnames(emp.comm)!="vermis"];emp.comm <- emp.comm[colnames(emp.comm)!="vindumi"]; emp.comm <- emp.comm[colnames(emp.comm)!="wrighti"];emp.comm <- emp.comm[colnames(emp.comm)!="suluensis"];emp.comm <- emp.comm[colnames(emp.comm)!="libayani"]
+  emp.comm <- emp.comm[colnames(emp.comm)!="species2"]; emp.comm <- emp.comm[colnames(emp.comm)!="dalawangdaliri"]; emp.comm <- emp.comm[colnames(emp.comm)!="c.f..bonitae"];emp.comm <- emp.comm[colnames(emp.comm)!="vermis"];emp.comm <- emp.comm[colnames(emp.comm)!="vindumi"]; emp.comm <- emp.comm[colnames(emp.comm)!="wrighti"];emp.comm <- emp.comm[colnames(emp.comm)!="suluensis"];#emp.comm <- emp.comm[colnames(emp.comm)!="libayani"]
   emp.comm <- emp.comm[rowSums(emp.comm)>=2,]
   
   results.list[[c]] <- cbind(rbind(emp.comm, rep(NA, times=ncol(emp.comm))), results.list[[c]])
@@ -171,8 +171,8 @@ for(b in 1:length(community.files.short)){results.lists[[b]] <- results.df}
 rm(results.df)
 
 #loop that runs all metrics and populates results object
-for (a in 1:length(community.files))	{
-  #for (a in 1)	{
+#for (a in 1:length(community.files))	{
+  for (a in 1:length(results.list))	{
   #read in community replicate
   emp.comm <- read.csv(paste0(community.files[a]), header=T, row.names=1)
   emp.comm <- emp.comm[lapply(emp.comm, class)!="factor"]
@@ -267,7 +267,7 @@ for (a in 1:length(community.files))	{
   results.lists[[a]] <- results.lists[[a]][!rowSums(is.na(results.lists[[a]])) > 0,]
   print(results.lists[[a]][!rowSums(is.na(results.lists[[a]])) > 0,])
   
-  rm(list=c("emp.comm", "ses.mpd.hold", "ses.mntd.hold", "psv.hold", "psv.bycom.hold", "psv.pvalues.hold"))
+  #rm(list=c("emp.comm", "ses.mpd.hold", "ses.mntd.hold", "psv.hold", "psv.bycom.hold", "psv.pvalues.hold"))
 }
 
 #loop to write the resulting metric values into objects (csv files)
@@ -276,7 +276,7 @@ for (c in 1:length(results.lists))	{
   emp.comm <- read.csv(paste0(community.files[c]), header=T, row.names=1)
   emp.comm <- emp.comm[lapply(emp.comm, class)!="factor"]
   #remove species without phy data
-  emp.comm <- emp.comm[colnames(emp.comm)!="species2"]; emp.comm <- emp.comm[colnames(emp.comm)!="dalawangdaliri"]; emp.comm <- emp.comm[colnames(emp.comm)!="c.f..bonitae"];emp.comm <- emp.comm[colnames(emp.comm)!="vermis"];emp.comm <- emp.comm[colnames(emp.comm)!="vindumi"]; emp.comm <- emp.comm[colnames(emp.comm)!="wrighti"];emp.comm <- emp.comm[colnames(emp.comm)!="suluensis"];emp.comm <- emp.comm[colnames(emp.comm)!="libayani"]
+  emp.comm <- emp.comm[colnames(emp.comm)!="species2"]; emp.comm <- emp.comm[colnames(emp.comm)!="dalawangdaliri"]; emp.comm <- emp.comm[colnames(emp.comm)!="c.f..bonitae"];emp.comm <- emp.comm[colnames(emp.comm)!="vermis"];emp.comm <- emp.comm[colnames(emp.comm)!="vindumi"]; emp.comm <- emp.comm[colnames(emp.comm)!="wrighti"];emp.comm <- emp.comm[colnames(emp.comm)!="suluensis"];#emp.comm <- emp.comm[colnames(emp.comm)!="libayani"]
   emp.comm <- emp.comm[rowSums(emp.comm)>=2,]
   
   results.lists[[c]] <- cbind(rbind(emp.comm, rep(NA, times=ncol(emp.comm))), results.lists[[c]])

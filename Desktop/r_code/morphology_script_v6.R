@@ -9,66 +9,73 @@ library(maptools)
 library(scales)
 library(TeachingDemos)
 
+
 #set working space mac
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology")
 #-----------------------------------------------------------------------------------------
-
-#set working space linux
-setwd("/home/nicholas/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters")
-
-#load in dataset 1 (here it is the morphometric data provided via CDS per individual with species identifier)
-read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v6_rawmeans.txt", header=T, fill=T, nrows=600) -> brach_morph
-
-#load in no TL version of dataset
-read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v6_rawmeans_noTL.txt", header=T, fill=T, nrows=600) -> brach_morph
-
-#load in absolutely reduced version of dataset
-read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v5_rawmeans_reduced.txt", header=T, fill=T, nrows=600) -> brach_morph
-
-#reduced noTL
-read.table("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_2016_brachymeles_morph_v5_rawmeans_reduced.txt", header=T, fill=T, nrows=600) -> brach_morph
-brach_morph <- brach_morph[!colnames(brach_morph) %in% "TL.HL"]
-
-#-----------------------------------------------------------------------------------------
-#New approach for Mahalanobis D^2 Visualization
-
-#Exclude any entries that are missing data
-brach_morph <- na.omit(brach_morph)
+#New Method for reading in data
+#read in morphology object
+read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_brachymeles_morph_raw_means.csv", header=T, fill=T, nrows=600) -> brach_morph
 
 #drop species that aren't considered in the CA structure portion
 brach_morph <- brach_morph[!brach_morph[,1]=="species2",]
 brach_morph <- brach_morph[!brach_morph[,1]=="species3",]
 brach_morph <- brach_morph[!brach_morph[,1]=="c.f._bonitae",]
 brach_morph <- brach_morph[!brach_morph[,1]=="c.f..bonitae",]
-#brach_morph <- brach_morph[!brach_morph[,1]=="vermis",]
-#brach_morph <- brach_morph[!brach_morph[,1]=="vindumi",]
-#brach_morph <- brach_morph[!brach_morph[,1]=="wrighti",]
+brach_morph <- brach_morph[!brach_morph[,1]=="apus",]
+brach_morph <- brach_morph[!brach_morph[,1]=="miriamae",]
 
-#check number of entries that remain
-length(brach_morph$Species)	#518 #here it is 515, why?
-
-unique(brach_morph$Species) #45 levels, should be 42 since dalawangdaliri and suluensis are omitted; libayani dropped
 brach_morph$Species <- droplevels(brach_morph$Species)
+#drop characters not of interest
+brach_morph <- brach_morph[!colnames(brach_morph) %in% "AGD"]
+brach_morph <- brach_morph[!colnames(brach_morph) %in% "NL"]
 
-#now check to ensure levels were dropped
-unique(brach_morph$Species) #45 levels, should be 43 since dalawangdaliri and suluensis are omitted; libayani dropped
 #-----------------------------------------------------------------------------------------
-#Revise characters
-#store nominal characters elsewhere
-brach_limbs <- brach_morph[colnames(brach_morph) %in% c("Species", "Limbstate", "Fldig", "Hldig")]
-#isolate characters
-brach_morph <- brach_morph[!colnames(brach_morph) %in% c("Limbstate", "Fldig", "Hldig")]
+###standardize ruling:
+##divide by HL
+#new brach object for transformed values
+#brach_morph_final <- brach_morph
+#store all HL
+brach_HL <- brach_morph$HL
+#rm HL from original object
+brach_morph_final <- brach_morph[!colnames(brach_morph) %in% "HL"]
+#divide certain columns by HL (SVL, TL, ForeL, HindL, MBW, MBD, TW, TD, HW, HD, ED, END, SNL, IND)
+for(b in 2:ncol(brach_morph_final)){
+  if(is.integer(brach_morph_final[,b])==FALSE && is.numeric(brach_morph_final[,b])==TRUE){
+    #ln(continuous value then divide by HL then add 1)
+    print(paste0("Continuous: ", colnames(brach_morph_final)[b]))
+    brach_morph_final[,b] <- log(((brach_morph_final[,b]/brach_HL)+1))
+  }
+  #ln(discrete value then add 1)
+  else if(is.integer(brach_morph_final[,b])==TRUE && is.numeric(brach_morph_final[,b])==TRUE){
+    print(paste0("Discrete: ", colnames(brach_morph_final)[b]))
+    brach_morph_final[,b] <- log(brach_morph_final[,b]+1)
+  }
+}
+#-----------------------------------------------------------------------------------------
+##Full dataset
+#Exclude any entries that are missing data
+brach_morph_final <- na.omit(brach_morph_final)
+#-----------------------------------------------------------------------------------------
+##FullNT
+brach_morph_final <- brach_morph_final[!colnames(brach_morph_final) %in% "TL"]
+#Exclude any entries that are missing data
+brach_morph_final <- na.omit(brach_morph_final)
+#-----------------------------------------------------------------------------------------
+##Body
+brach_morph_final <- brach_morph_final[colnames(brach_morph_final) %in% c("SVL","ForeL","HindL", "MBW","TL","TW","HW","Limbstate","Fldig","Hldig")]
+#Exclude any entries that are missing data
+brach_morph_final <- na.omit(brach_morph_final)
+#-----------------------------------------------------------------------------------------
+##BodyNT
+brach_morph_final <- brach_morph_final[colnames(brach_morph_final) %in% c("SVL","ForeL","HindL", "MBW","TW","HW","Limbstate","Fldig","Hldig")]
+#Exclude any entries that are missing data
+brach_morph_final <- na.omit(brach_morph_final)
+#-----------------------------------------------------------------------------------------
+brach_morph_final$Species <- droplevels(brach_morph_final$Species)
+#-----------------------------------------------------------------------------------------
 
 
-#determine number of species in based on the number of unique values in the scaled dataset
-#spp.num <- length(unique(brach_morph[,"Species"]))
-#create palette
-#sp.palette <- c("#DD422B","#78E63A","#626EDC","#2B352A","#5FD3C3","#E5B832","#D13D91","#D1937B","#48628D","#748F2F","#D1A7C9","#D44BD6","#DEDA97","#914A1A","#497972","#C3DC3C","#DC3F5C","#549F69","#501F21","#69E379","#8A325A","#6B3F82","#826A72","#3B2946","#385521","#D4CCC5","#9D8025","#7691D7","#D37EC0","#66E4AA","#9BA27D","#98B5D0","#D46F7C","#DA7A35","#BAE2BB","#ABDD7C","#CECD5F","#D4AB65","#704D2B","#A265CE","#993530","#4EBB3A","#7E7A46","#69C4D6","#4A942E")
-#create set of colors for points
-#pts.pick <- sp.palette[1:spp.num]
-#names(pts.pick)<-unique(as.character(brach_morph[,"Species"]))
-
-#tol21rainbow= c("#771155", "#AA4488", "#CC99BB", "#114477", "#4477AA", "#77AADD", "#117777", "#44AAAA", "#77CCCC", "#117744", "#44AA77", "#88CCAA", "#777711", "#AAAA44", "#DDDD77", "#774411", "#AA7744", "#DDAA77", "#771122", "#AA4455", "#DD7788")
 
 library(RColorBrewer)
 n <- 40
@@ -83,7 +90,7 @@ cols40 <- sort(c(1, 2, 3, 5, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 24, 2
 pie(rep(1,40), col=col_vector[cols40])
 
 #create palette
-sp.palette <- (col_vector[cols40])[1:length(unique(brach_morph$Species))]
+sp.palette <- (col_vector[cols40])[1:length(unique(brach_morph_final$Species))]
 
 
 #store colors and species
@@ -99,8 +106,8 @@ brach_limb <- tapply(round(exp(brach_limbs$Limbstate)-1), INDEX=brach_limbs$Spec
 
 
 #alternative function
-pca.alt <- PCA(brach_morph, scale.unit=T, ncp=(ncol(brach_morph)-1), graph=F, quali.sup=1)
-concat <- cbind.data.frame(brach_morph[,1],pca.alt$ind$coord)
+pca.alt <- PCA(brach_morph_final, scale.unit=T, ncp=(ncol(brach_morph_final)-1), graph=F, quali.sup=1)
+concat <- cbind.data.frame(brach_morph_final[,1],pca.alt$ind$coord)
 ellipses.cord <- coord.ellipse(concat,bary=TRUE)
 plot(pca.alt, axes=c(1,2), choix="ind", palette=palette(sp.palette), habillage = 1, ellipse = ellipses.cord, label="quali", cex=0.6, legend=NULL)
 plot(pca.alt, axes=c(1,2), choix="ind", palette=palette(sp.palette), habillage = 1,  label="quali", cex=0.6, legend=NULL)
@@ -109,8 +116,8 @@ plot(pca.alt, axes=c(1,2), choix="ind", palette=palette(sp.palette), habillage =
 summary(pca.alt)
 
 #obtain all loadings regardless of community to establish approximate min and max for figure
-pca.all <- prcomp(brach_morph[,2:ncol(brach_morph)], scale=T)
-rownames(pca.all$x) <- sort(unique(brach_morph$Species))
+pca.all <- prcomp(brach_morph_final[,2:ncol(brach_morph_final)], scale=T)
+rownames(pca.all$x) <- sort(unique(brach_morph_final$Species))
 
 summary(pca.all)->pca.varholder
 

@@ -24,8 +24,8 @@ pvalue.overlap <- function(NET, emp.overlap) {   #emp overlap is a vector of com
 
 #obtain list of possible .rData files to use in comparisons
 
-NET.files <- list.files("/Volumes/NAHURON_THESIS/NET/", pattern=".rda$", full.names = T)
-NET.names <- list.files("/Volumes/NAHURON_THESIS/NET/", pattern=".rda$", full.names = F)
+NET.files <- list.files("/Volumes/NAHURON_THESIS/NET2/", pattern=".rda$", full.names = T)
+NET.names <- list.files("/Volumes/NAHURON_THESIS/NET2/", pattern=".rda$", full.names = F)
   NET.names <-  gsub("\\.rda$","",NET.names)
 
 #obtain the appropriate niolap file and split it
@@ -67,7 +67,7 @@ for (a in 1:length(NET.files))  {
   gc()
 }
 
-write.csv(pvalues.net, file="/Volumes/NAHURON_THESIS/NET/pvalues.net.revised.csv", row.names=T, col.names=T)
+write.csv(pvalues.net, file="/Volumes/NAHURON_THESIS/pvalues.net.revised8.csv", row.names=T, col.names=T)
 
 
 #Compare BST niche.overlap

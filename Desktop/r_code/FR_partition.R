@@ -46,7 +46,7 @@ factor_partition <- function(inputdirectory, inputfilepattern, factorby, outputd
 factor_partition(inputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic.fr")
 
 #morphological data
-factor_partition(inputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets//Morphological/com.morph.fr")
+factor_partition(inputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morphd2.noTL", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets//Morphological/com.morphd2.noTL.fr")
 
 #morphological data with noTL
 factor_partition(inputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.noTL", inputfilepattern = "_fr.csv", factorby = c("L","M"), outputdirectory = "/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/com.morph.noTL.fr")

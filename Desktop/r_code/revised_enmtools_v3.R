@@ -99,9 +99,9 @@ brach.bothlist.index <- seq(1,40,1)
 #set external as writing source
 setwd("/Volumes/NAHURON_THESIS/NET/")
 
-for (b in brach.bothlist.index[33])	{
+for (b in brach.bothlist.index[34])	{
   
-  for (c in brach.bothlist.index[28]){
+  for (c in brach.bothlist.index[22]){
     if(c>b)	{print("Skip due to later comparison")}
     else if(names(sp.list[b]) == names(sp.list[c]))	{print("Skip due to same species")}
     else	{

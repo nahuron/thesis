@@ -280,6 +280,10 @@ mypal_viridis <- viridis(20,1,0,1,"D")
 mypal_viridis_t <- viridis(20,0.5,0,1,"D")
 
 setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic/")
+#individual PAICs
+setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic.l/")
+setwd("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/com.genetic.m/")
+
 
 #obtain file paths
 mydata.filepath <- list.files(path=getwd(), pattern = "\\.csv$", full.names = TRUE)
@@ -288,9 +292,6 @@ mydata.filepathshort <- gsub("\\.csv$","",list.files(path=getwd(), pattern = ".c
 #genetic
 mydata.filepathshort[-grep("phylo_fr", mydata.filepathshort)] -> mydata.filepathshort
 mydata.filepath[-grep("_fr.csv", mydata.filepath)] -> mydata.filepath
-
-#Tails
-#load(file="/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Genetic/results.tails.rda")
 
 #objects to store results
 results.gen <- list()
@@ -313,8 +314,15 @@ for (b in 1:length(results.gen)){
   results.gen[[b]] <- results.gen[[b]][-as.numeric(nrow(results.gen[[b]])),]
 }
 
+#if results are for a PAIC, assign to new object for plotting
+results.gen.l <- results.gen
+results.gen.means.l <- results.gen.means
+
+results.gen.m <- results.gen
+results.gen.means.m <- results.gen.means
 
 
+#plot standard stacked MPD vs MNTD
 plot(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mpd, pch=16, col=rgb(0,114/255,178/255,1),  ylim=c(-6,6), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
 for(c in 1:length(results.gen)){
   boxplot(results.gen[[c]]$ses.mpd, border=rgb(0,114/255,178/255,1), boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
@@ -327,7 +335,6 @@ for(c in 1:length(results.gen)){
   #abline(h=results.tails$ses.mpd.lower[c], col="blue", lty=2)
   #abline(h=results.tails$ses.mpd.upper[c], col="blue", lty=2)
 }
-
 points(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mntd, pch=16, col=rgb(213/255,94/255,0,1),  ylim=c(-6,6), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
 for(c in 1:length(results.gen)){
   boxplot(results.gen[[c]]$ses.mntd, border=rgb(213/255,94/255,0,1), boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
@@ -336,16 +343,22 @@ for(c in 1:length(results.gen)){
          y=results.gen[[c]]$ses.mntd[results.gen[[c]]$ses.mntd.p >= 0.975 | results.gen[[c]]$ses.mntd.p <= 0.025],
          col=rgb(213/255,94/255,0,1),
          pch=18, cex=1.75)
-  
-  #abline(h=results.tails$ses.mntd.lower[c], col="red", lty=2)
-  #abline(h=results.tails$ses.mntd.upper[c], col="red", lty=2)
 }
 
 abline(h=0, lty=2)
 points(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mntd, pch=16, col=rgb(213/255,94/255,0,1),  ylim=c(-5,5), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
 points(seq(from=0.05,to=1.00,by=0.05), results.gen.means$ses.mpd, pch=16, col=rgb(0,114/255,178/255,1),  ylim=c(-5,5), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Metric Value")
 legend(x=0.8, y=4.75, legend=c("SES.MPD", "SES.MNTD"), col="black", fill=c(rgb(0,114/255,178/255,1), rgb(213/255,94/255,0,1)), bty="n")
+for(c in 1:nrow(results.gen.means)){
+  if(results.gen.means$ses.mpd.p[c] <= 0.025 | results.gen.means$ses.mpd.p[c] >= 0.975){
+    points(seq(from=0.05,to=1.00,by=0.05)[c], results.gen.means$ses.mpd[c], pch=23, col="black", bg=rgb(0,114/255,178/255,1))
+  }
+  if(results.gen.means$ses.mntd.p[c]<= 0.025 | results.gen.means$ses.mntd.p[c] >= 0.975){
+    points(seq(from=0.05,to=1.00,by=0.05)[c], results.gen.means$ses.mntd[c], pch=23, col="black", bg=rgb(213/255,94/255,0,1))
+  }
+}
 
+#plot standard PSV
 plot(seq(from=0.05,to=1.00,by=0.05), results.gen.means$psv, pch=16, col=rgb(0,158/255,115/255,1),  ylim=c(0,1.05), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="PSV")
 for(c in 1:length(results.gen)){
   boxplot(results.gen[[c]]$psv, border=rgb(0,158/255,115/255,1), boxwex=0.075, at=(seq(from=0.05,to=1.00,by=0.05)[c]), add=TRUE, axes=FALSE,col=mypal_viridis_t[c])
@@ -355,12 +368,140 @@ for(c in 1:length(results.gen)){
          y=results.gen[[c]]$psv[results.gen[[c]]$psv.p >= 0.975 | results.gen[[c]]$psv.p <= 0.025],
          col=rgb(0,158/255,115/255,1),
          pch=18, cex=1.75)
-  
-  #abline(h=results.tails$psv.lower[c], col="black", lty=2)
-  #abline(h=results.tails$psv.upper[c], col="black", lty=2)
+}
+for(c in 1:nrow(results.gen.means)){
+  if(results.gen.means$psv.p[c] <= 0.025 | results.gen.means$psv.p[c] >= 0.975){
+    points(seq(from=0.05,to=1.00,by=0.05)[c], results.gen.means$psv[c], pch=23, col="black", bg=rgb(0,158/255,115/255,1))
+  }
 }
 
 
+#plot PAICs against one another
+
+#MPD
+#first plot the mean by grid size points
+#luzon
+plot(seq(from=0.05,to=1.00,by=0.05)-0.01, results.gen.means.l$ses.mpd, pch=16, col=rgb(0,114/255,178/255,1),  ylim=c(-5,4), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="Phylogenetic Dispersion")
+abline(h=0, lty=2)
+#mindanao
+points(seq(from=0.05,to=1.00,by=0.05)+0.01, results.gen.means.m$ses.mpd, pch=16, col=rgb(0,158/255,115/255,1))
+for(c in 1:length(results.gen.l)){
+  boxplot(results.gen.l[[c]]$ses.mpd, border="black", lwd=2, boxwex=0.075/2, at=(seq(from=0.05,to=1.00,by=0.05)[c]-0.01), add=TRUE, axes=FALSE, col=rgb(0,114/255,178/255,0.5), outcol=rgb(0,114/255,178/255,1))
+  boxplot(results.gen.m[[c]]$ses.mpd, border="black", lwd=2, boxwex=0.075/2, at=(seq(from=0.05,to=1.00,by=0.05)[c]+0.01), add=TRUE, axes=FALSE, col=rgb(0,158/255,115/255,0.5), outcol=rgb(0,158/255,115/255,1))
+
+  points(x=rep(as.numeric(names(results.gen.l)[c])-0.01, times=length(results.gen.l[[c]]$ses.mpd[results.gen.l[[c]]$ses.mpd.p >= 0.975 | results.gen.l[[c]]$ses.mpd.p <= 0.025])),
+         y=results.gen.l[[c]]$ses.mpd[results.gen.l[[c]]$ses.mpd.p >= 0.975 | results.gen.l[[c]]$ses.mpd.p <= 0.025],
+         col="black",
+           bg=rgb(0,114/255,178/255,1),
+         pch=23, cex=1.5, lwd=2)
+  points(x=rep(as.numeric(names(results.gen.m)[c])+0.01, times=length(results.gen.m[[c]]$ses.mpd[results.gen.m[[c]]$ses.mpd.p >= 0.975 | results.gen.m[[c]]$ses.mpd.p <= 0.025])),
+         y=results.gen.m[[c]]$ses.mpd[results.gen.m[[c]]$ses.mpd.p >= 0.975 | results.gen.m[[c]]$ses.mpd.p <= 0.025],
+         col="black",
+           bg=rgb(0,158/255,115/255,1),
+         pch=23, cex=1.5, lwd=2)
+}
+
+#MNTD on same figure
+for(c in 1:length(results.gen.l)){
+  boxplot(results.gen.l[[c]]$ses.mntd, border=rgb(0,114/255,178/255,0.75), lwd=2, boxwex=0.075/2, at=(seq(from=0.05,to=1.00,by=0.05)[c]-0.01), add=TRUE, axes=FALSE, col=rgb(0,0,0,0.35), outcol=rgb(0,0,0,1))
+  boxplot(results.gen.m[[c]]$ses.mntd, border=rgb(0,158/255,115/255,0.75), lwd=2, boxwex=0.075/2, at=(seq(from=0.05,to=1.00,by=0.05)[c]+0.01), add=TRUE, axes=FALSE, col=rgb(0,0,0,0.35), outcol=rgb(0,0,0,1))
+  
+  points(x=rep(as.numeric(names(results.gen.l)[c])-0.01, times=length(results.gen.l[[c]]$ses.mntd[results.gen.l[[c]]$ses.mntd.p >= 0.975 | results.gen.l[[c]]$ses.mntd.p <= 0.025])),
+         y=results.gen.l[[c]]$ses.mntd[results.gen.l[[c]]$ses.mntd.p >= 0.975 | results.gen.l[[c]]$ses.mntd.p <= 0.025],
+         bg="black",
+         col=rgb(0,114/255,178/255,1),
+         pch=23, cex=1.5, lwd=2)
+  points(x=rep(as.numeric(names(results.gen.m)[c])+0.01, times=length(results.gen.m[[c]]$ses.mntd[results.gen.m[[c]]$ses.mntd.p >= 0.975 | results.gen.m[[c]]$ses.mntd.p <= 0.025])),
+         y=results.gen.m[[c]]$ses.mntd[results.gen.m[[c]]$ses.mntd.p >= 0.975 | results.gen.m[[c]]$ses.mntd.p <= 0.025],
+         bg="black",
+          col=rgb(0,158/255,115/255,1),
+         pch=23, cex=1.5, lwd=2)
+}
+
+#MPD
+points(seq(from=0.05,to=1.00,by=0.05)-0.01, results.gen.means.l$ses.mpd, pch=21, col="black", bg=rgb(0,114/255,178/255,1), lwd=2, cex=1.5)
+points(seq(from=0.05,to=1.00,by=0.05)+0.01, results.gen.means.m$ses.mpd, pch=21, col="black", bg=rgb(0,158/255,115/255,1), lwd=2, cex=1.5)
+#MNTD
+points(seq(from=0.05,to=1.00,by=0.05)-0.01, results.gen.means.l$ses.mntd, pch=21, col=rgb(0,114/255,178/255,1), bg="black", lwd=2, cex=1.5)
+points(seq(from=0.05,to=1.00,by=0.05)+0.01, results.gen.means.m$ses.mntd, pch=21, col=rgb(0,158/255,115/255,1), bg="black", lwd=2, cex=1.5)
+
+#community means
+for(c in 1:nrow(results.gen.means)){
+  if(results.gen.means.l$ses.mpd.p[c] <= 0.025 | results.gen.means.l$ses.mpd.p[c] >= 0.975){
+    points(seq(from=0.05,to=1.00,by=0.05)[c]-0.01, results.gen.means.l$ses.mpd[c], pch=23, col=rgb(1,1,1,0.65), bg=rgb(0,114/255,178/255,1), cex=1.25)
+  }
+  if(results.gen.means.m$ses.mpd.p[c] <= 0.025 | results.gen.means.m$ses.mpd.p[c] >= 0.975){
+    points(seq(from=0.05,to=1.00,by=0.05)[c]+0.01, results.gen.means.m$ses.mpd[c], pch=23, col=rgb(1,1,1,0.65), bg=rgb(0,158/255,115/255,1), cex=1.25)
+  }
+  
+  if(results.gen.means.l$ses.mntd.p[c] <= 0.025 | results.gen.means.l$ses.mntd.p[c] >= 0.975){
+    points(seq(from=0.05,to=1.00,by=0.05)[c]-0.01, results.gen.means.l$ses.mntd[c], pch=23, bg=rgb(1,1,1,0.65), col=rgb(0,114/255,178/255,1), cex=1.25)
+  }
+  if(results.gen.means.m$ses.mntd.p[c] <= 0.025 | results.gen.means.m$ses.mntd.p[c] >= 0.975){
+    points(seq(from=0.05,to=1.00,by=0.05)[c]+0.01, results.gen.means.m$ses.mntd[c], pch=23, bg=rgb(1,1,1,0.65), col=rgb(0,158/255,115/255,1), cex=1.25)
+  }
+  
+}
+
+
+
+legend(x="topright", 
+       legend=c(expression('Luzon SES'[MPD]),expression('Luzon SES'[MNTD]),expression('Mindanao SES'[MPD]),expression('Mindanao SES'[MNTD])),
+       pt.bg= c(rgb(0,114/255,178/255,1), "black", rgb(0,158/255,115/255,1),"black"), 
+       col=c("black",rgb(0,114/255,178/255,1),"black", rgb(0,158/255,115/255,1)), 
+       pt.lwd = 2,
+       pt.cex = 2,
+       pch=rep(22,4),
+       bty="n", cex=0.75, y.intersp = 0.65)
+
+
+#PSV
+plot(seq(from=0.05,to=1.00,by=0.05)-0.01, results.gen.means.l$psv, pch=16, col=rgb(0,0,0,0.65),  ylim=c(0,1.05), xlim=c(0.00,1.05), xlab="Grid Size (Decimal Degrees)", ylab="PSV")
+abline(h=0.854, lty=2)
+points(seq(from=0.05,to=1.00,by=0.05)+0.01, results.gen.means.m$psv, pch=16, col=rgb(0,0,0,0.65))
+for(c in 1:length(results.gen.l)){
+  boxplot(results.gen.l[[c]]$psv, col=rgb(0,0,0,0.65), lwd=2, boxwex=0.075/2, at=(seq(from=0.05,to=1.00,by=0.05)[c]-0.01), add=TRUE, axes=FALSE, border=rgb(0,114/255,178/255,0.5), outcol=rgb(0,114/255,178/255,1))
+  boxplot(results.gen.m[[c]]$psv, col=rgb(0,0,0,0.65), lwd=2, boxwex=0.075/2, at=(seq(from=0.05,to=1.00,by=0.05)[c]+0.01), add=TRUE, axes=FALSE, border=rgb(0,158/255,115/255,0.5), outcol=rgb(0,158/255,115/255,1))
+  
+  points(x=rep(as.numeric(names(results.gen.l)[c])-0.01, times=length(results.gen.l[[c]]$psv[results.gen.l[[c]]$psv.p >= 0.975 | results.gen.l[[c]]$psv.p <= 0.025])),
+         y=results.gen.l[[c]]$psv[results.gen.l[[c]]$psv.p >= 0.975 | results.gen.l[[c]]$psv.p <= 0.025],
+         bg=rgb(0,0,0,0.65),
+         col=rgb(0,114/255,178/255,1),
+         pch=23, cex=1.5, lwd=2)
+  points(x=rep(as.numeric(names(results.gen.m)[c])+0.01, times=length(results.gen.m[[c]]$psv[results.gen.m[[c]]$psv.p >= 0.975 | results.gen.m[[c]]$psv.p <= 0.025])),
+         y=results.gen.m[[c]]$psv[results.gen.m[[c]]$psv.p >= 0.975 | results.gen.m[[c]]$psv.p <= 0.025],
+         bg=rgb(0,0,0,0.65),
+         col=rgb(0,158/255,115/255,1),
+         pch=23, cex=1.5, lwd=2)
+}
+points(seq(from=0.05,to=1.00,by=0.05)-0.01, results.gen.means.l$psv, pch=21, bg=rgb(0,0,0,0.65),col=rgb(0,114/255,178/255,1))
+points(seq(from=0.05,to=1.00,by=0.05)+0.01, results.gen.means.m$psv, pch=21, bg=rgb(0,0,0,0.65), col=rgb(0,158/255,115/255,1))
+for(c in 1:nrow(results.gen.means)){
+  if(results.gen.means.l$psv.p[c] <= 0.025 | results.gen.means.l$psv.p[c] >= 0.975){
+    points(seq(from=0.05,to=1.00,by=0.05)[c]-0.01, results.gen.means.l$psv[c], pch=23, col=rgb(1,1,1,0.65), bg=rgb(0,114/255,178/255,1), cex=1.25)
+  }
+  if(results.gen.means.m$psv.p[c] <= 0.025 | results.gen.means.m$psv.p[c] >= 0.975){
+    points(seq(from=0.05,to=1.00,by=0.05)[c]+0.01, results.gen.means.m$psv[c], pch=23, col=rgb(1,1,1,0.65), bg=rgb(0,158/255,115/255,1), cex=1.25)
+  }
+  
+}
+
+
+legend(x="bottomleft", 
+       legend=c('Luzon PSV','Mindanao PSV'),
+       pt.bg= c(rgb(0,0,0,0.65), rgb(0,0,0,0.65)), 
+       col=c(rgb(0,114/255,178/255,1), rgb(0,158/255,115/255,1)), 
+       pt.lwd = 2,
+       pt.cex = 2,
+       pch=rep(22,4),
+       bty="n", cex=0.75, y.intersp = 0.65)
+
+
+
+
+
+
+#plot for standard vs new method?
 plot(seq(0.05,1,0.05), results.gen.means$ses.mpd, ylim=c(-1,1), cex=1.25, ylab = "Metric Mean", xlab = "Grid Size", pch=21, bg=rgb(0,114/255,178/255,1))
 points(seq(0.05,1,0.05), results.gen.means.s$ses.mpd, pch=23, cex=1.25, bg=rgb(0,114/255,178/255,1))
 points(seq(0.05,1,0.05), results.gen.means$ses.mntd, bg=rgb(213/255,94/255,0,1), pch=21, cex=1.25)
@@ -368,7 +509,6 @@ points(seq(0.05,1,0.05), results.gen.means.s$ses.mntd, pch=23, bg=rgb(213/255,94
 points(seq(0.05,1,0.05), results.gen.means.s$psv, bg=rgb(0,158/255,115/255,1), pch=23, cex=1.35)
 points(seq(0.05,1,0.05), results.gen.means$psv, bg=rgb(0,158/255,115/255,1), pch=21, cex=1.20)
 
-legend(y=-0.40, x=0.15, 
        legend=c("SES.MPD","SES.MPD.S", "SES.MNTD", "SES.MNTD.S", "PSV", "PSV.S"), 
        pt.bg=c(rgb(0,114/255,178/255,1),rgb(0,114/255,178/255,1),rgb(213/255,94/255,0,1),rgb(213/255,94/255,0,1),rgb(0,158/255,115/255,1), rgb(0,158/255,115/255,1)), 
        col=rep("black", 6),

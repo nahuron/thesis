@@ -127,7 +127,7 @@ lines(sigs)
 
   
 #NST
-  pvalues.nst <- read.csv("/Volumes/NAHURON_THESIS/pvalues.net.revised1.csv", header=T)
+  pvalues.nst <- read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Geographic/pvalues.net.revised.csv", header=T)
   
   NET_names <- sort(pvalues.nst[,1])
   
