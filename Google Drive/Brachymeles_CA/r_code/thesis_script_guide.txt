@@ -1,0 +1,12 @@
+Function/Script Notes
+
+1. community_sorter_v2.R— generates binary community matrix from coordinate data with a specific decimal degree grid size
+2. microendemic_localities_v2.R— generates additional coordinate presence points from presence points and a raster of the geographical area of interest. 
+Coordinate points are adjacent to the input coordinates or surround the input coordinates based on the adjacency type. A subsample of possible adjacent
+points can be selected if the snumber argument is smaller than the total number of points produced. Results can be saved as CSV files to a directory of
+the user's choosing.
+3. phylostruct_revisedv2.R— alternative version of the phylostruct that has an extra null community builder option: null communities are built with the
+community.simulator function (sim_coms.txt)
+4. com.simulator.R— function that devises null communities from a species list. The user sets the minimum and maximum possible number of species/community
+and the requested number of null communities. The output matrix is a binary community matrix and can be saved as a CSV
+5. species_sorter.R— function that separates coordinate data by species and saves new CSV files for the coordinates for each species
