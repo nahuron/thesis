@@ -1,6 +1,12 @@
 #PCA by species means (transform, then calculate means)
+#required packages to load
+library(maptools)
+library(scales)
+library(TeachingDemos)
+library(RColorBrewer)
+
 #read in morphology object
-read.csv("/Users/nicholashuron/Dropbox/STUDENT FOLDERS/Huron, Nick/Huron_Nick_Masters/Datasets/Morphological/brachymeles.morphology/huron_brachymeles_morph_raw_means.csv", header=T, fill=T, nrows=600) -> brach_morph
+read.csv("/Users/nicholashuron/Desktop/Huron, Nicholas/thesis/Datasets/Morphological/brachymeles.morphology/huron_brachymeles_morph_raw_means.csv", header=T, fill=T, nrows=600) -> brach_morph
 
 #drop species that aren't considered in the CA structure portion
 brach_morph <- brach_morph[!brach_morph[,1]=="species2",]
@@ -91,10 +97,6 @@ rownames(pca.all$x) <- sort(unique(brach_morph_means$Species))
 summary(pca.all)->pca.varholder
 #-----------------------------------------------------------------------------------------
 
-library(maptools)
-library(scales)
-library(TeachingDemos)
-library(RColorBrewer)
 n <- 40
 qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
 col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
